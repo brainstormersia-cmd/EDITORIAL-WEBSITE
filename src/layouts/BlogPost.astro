@@ -32,10 +32,12 @@ const jsonLd = {
         content={content}
       />
     </div>
-    <div class="mt-6 border border-border">
-      {image && (
-        <Image src={image} alt={frontmatter.title} width={1200} height={675} class="w-full h-full object-cover" />
-      )}
+    <div class="mt-8 mb-10 max-w-3xl mx-auto">
+      <div class="aspect-video border border-border">
+        {image && (
+          <Image src={image} alt={frontmatter.title} width={1200} height={675} class="w-full h-full object-cover" />
+        )}
+      </div>
     </div>
     <div class="article-content prose prose-lg mt-10 max-w-3xl">
       <slot />
