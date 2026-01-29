@@ -22,7 +22,9 @@ const jsonLd = {
 ---
 <BaseLayout title={frontmatter.title} description={frontmatter.description} image={image?.src ?? frontmatter.mainImage} canonical={canonical}>
   <article class="container py-12">
-    <p class="text-xs uppercase tracking-[0.3em] text-muted">{frontmatter.category}</p>
+    <span class="inline-flex bg-accent text-fg text-xs font-semibold uppercase tracking-[0.3em] px-3 py-1">
+      {frontmatter.category}
+    </span>
     <h1 class="text-4xl md:text-5xl font-bold mt-3">{frontmatter.title}</h1>
     <div class="mt-4">
       <AuthorByline

@@ -10,7 +10,8 @@ const bullets = [post.data.description, ...post.data.tags].slice(0, 2);
     <h1 class="text-4xl md:text-5xl font-bold mt-3">
       <a href={`/blog/${post.slug}`} class="hover:text-accent">{post.data.title}</a>
     </h1>
-    <ul class="mt-4 space-y-2 text-sm text-muted">
+    <p class="mt-4 text-xs font-semibold uppercase tracking-[0.3em]">Perché conta</p>
+    <ul class="mt-3 space-y-2 text-sm text-muted">
       {bullets.map((item) => (
         <li>• {item}</li>
       ))}
