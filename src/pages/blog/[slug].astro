@@ -1,0 +1,20 @@
+---
+import BlogPost from "../../layouts/BlogPost.astro";
+import { getCollection } from "astro:content";
+import { getImageByName } from "../../utils/imageMap";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const image = getImageByName(post.data.mainImage);
+---
+<BlogPost frontmatter={post.data} image={image} content={post.body} url={Astro.url.pathname}>
+  <Content />
+</BlogPost>

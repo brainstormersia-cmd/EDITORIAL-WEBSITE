@@ -1,0 +1,82 @@
+@import "./variables.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.kw {
+  display: inline-block;
+  background: var(--color-fg);
+  color: var(--color-accent);
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-none);
+  font-weight: 600;
+}
+
+.signature-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.signature-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.35rem;
+  width: 32%;
+  height: 4px;
+  background: var(--color-accent);
+}
+
+.article-content h2 {
+  position: relative;
+  padding-bottom: 0.6rem;
+}
+
+.article-content h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30%;
+  height: 4px;
+  background: var(--color-accent);
+}
+
+.trending-number {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-fg);
+  text-shadow: 1px 1px 0 var(--color-fg);
+  line-height: 1;
+}
+
+.topline {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}

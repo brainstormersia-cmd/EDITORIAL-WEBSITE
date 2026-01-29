@@ -1,0 +1,22 @@
+---
+import "../styles/global.css";
+import { SITE_CONFIG } from "../consts";
+import MetaHead from "../components/MetaHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const { title, description, image, canonical } = Astro.props;
+---
+<!doctype html>
+<html lang={SITE_CONFIG.locale}>
+  <head>
+    <MetaHead title={title} description={description} image={image} canonical={canonical} />
+  </head>
+  <body class="bg-bg text-fg">
+    <Header />
+    <main class="min-h-screen">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
