@@ -1,0 +1,45 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "./BaseLayout.astro";
+import AuthorByline from "../components/AuthorByline.astro";
+import { SITE_CONFIG } from "../consts";
+
+const { frontmatter, image, content, url } = Astro.props;
+const canonical = `${SITE_CONFIG.siteUrl}${url}`;
+const imageUrl = image?.src ? `${SITE_CONFIG.siteUrl}${image.src}` : `${SITE_CONFIG.siteUrl}${frontmatter.mainImage}`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: frontmatter.title,
+  datePublished: frontmatter.pubDate,
+  author: {
+    "@type": "Person",
+    name: frontmatter.author
+  },
+  image: imageUrl,
+  description: frontmatter.description
+};
+---
+<BaseLayout title={frontmatter.title} description={frontmatter.description} image={image?.src ?? frontmatter.mainImage} canonical={canonical}>
+  <article class="container py-12">
+    <p class="text-xs uppercase tracking-[0.3em] text-muted">{frontmatter.category}</p>
+    <h1 class="text-4xl md:text-5xl font-bold mt-3">{frontmatter.title}</h1>
+    <div class="mt-4">
+      <AuthorByline
+        author={frontmatter.author}
+        authorImage={frontmatter.authorImage}
+        date={frontmatter.pubDate}
+        content={content}
+      />
+    </div>
+    <div class="mt-6 border border-border">
+      {image && (
+        <Image src={image} alt={frontmatter.title} width={1200} height={675} class="w-full h-full object-cover" />
+      )}
+    </div>
+    <div class="article-content prose prose-lg mt-10 max-w-3xl">
+      <slot />
+    </div>
+  </article>
+  <script type="application/ld+json" is:inline>{JSON.stringify(jsonLd)}</script>
+</BaseLayout>

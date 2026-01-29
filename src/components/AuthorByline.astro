@@ -1,0 +1,26 @@
+---
+import { readingTime } from "../utils/readingTime";
+
+const { author, authorImage, date, content } = Astro.props;
+const formattedDate = new Date(date).toLocaleDateString("it-IT", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+const time = readingTime(content ?? "");
+---
+<div class="flex items-center gap-3 text-sm">
+  <img
+    src={authorImage}
+    alt={`Foto di ${author}`}
+    class="h-8 w-8 rounded-full border border-accent object-cover"
+    width="32"
+    height="32"
+    loading="lazy"
+  />
+  <span class="font-semibold">{author}</span>
+  <span class="text-accent">·</span>
+  <span class="text-muted">{formattedDate}</span>
+  <span class="text-accent">·</span>
+  <span class="text-muted">{time}</span>
+</div>

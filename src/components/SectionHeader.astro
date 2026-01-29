@@ -1,0 +1,9 @@
+---
+const { title, linkText, linkHref } = Astro.props;
+---
+<div class="flex items-center justify-between border-b border-border pb-3">
+  <h2 class="text-2xl font-bold signature-underline">{title}</h2>
+  {linkHref && (
+    <a href={linkHref} class="text-xs uppercase tracking-[0.3em] hover:text-accent">{linkText}</a>
+  )}
+</div>

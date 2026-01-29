@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+import { getImageByName } from "../../utils/imageMap";
+import { slugify } from "../../utils/slug";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tags = Array.from(new Set(posts.flatMap((post) => post.data.tags)));
+  return tags.map((tag) => ({
+    params: { slug: slugify(tag) },
+    props: { tag }
+  }));
+}
+
+const { tag } = Astro.props;
+const posts = (await getCollection("blog"))
+  .filter((post) => post.data.tags.includes(tag))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title={`Tag: ${tag}`} description={`Articoli con tag ${tag}.`}>
+  <div class="container py-12 space-y-10">
+    <SectionHeader title={`Tag: ${tag}`} linkText="Archivio" linkHref="/blog" />
+    <div class="grid gap-6 md:grid-cols-2">
+      {posts.map((post) => (
+        <PostCard post={post} image={getImageByName(post.data.mainImage)} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
