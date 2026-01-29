@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
 import AuthorByline from "../components/AuthorByline.astro";
+import AssistantSummary from "../components/AssistantSummary.astro";
 import { SITE_CONFIG } from "../consts";
 
 const { frontmatter, image, content, url } = Astro.props;
@@ -43,6 +44,7 @@ const jsonLd = {
     </div>
     <div class="article-content prose prose-lg mt-10 max-w-3xl">
       <slot />
+      <AssistantSummary />
     </div>
   </article>
   <script type="application/ld+json" is:inline>{JSON.stringify(jsonLd)}</script>
