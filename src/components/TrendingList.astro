@@ -6,11 +6,11 @@ const { posts } = Astro.props;
     <div class="flex gap-4">
       <span class="trending-number">{String(index + 1).padStart(2, "0")}</span>
       <div>
-        <p class="text-xs uppercase tracking-[0.3em] text-muted">{post.data.category}</p>
-        <h3 class="text-lg font-semibold">
+        <p class="text-[0.65rem] uppercase tracking-[0.3em] text-muted leading-tight">{post.data.category}</p>
+        <h3 class="text-lg font-semibold leading-snug">
           <a href={`/blog/${post.slug}`} class="hover:text-accent">{post.data.title}</a>
         </h3>
-        <p class="text-sm text-muted mt-1">{post.data.description}</p>
+        <p class="text-xs text-muted mt-1 leading-snug">{post.data.description}</p>
       </div>
     </div>
   ))}

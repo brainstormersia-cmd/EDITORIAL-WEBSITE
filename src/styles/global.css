@@ -68,12 +68,12 @@ a {
 }
 
 .trending-number {
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-size: clamp(2.9rem, 4.6vw, 4.5rem);
   font-weight: 700;
   color: transparent;
-  -webkit-text-stroke: 1px var(--color-fg);
-  text-shadow: 1px 1px 0 var(--color-fg);
-  line-height: 1;
+  -webkit-text-stroke: 2px var(--color-fg);
+  text-shadow: 2px 2px 0 var(--color-fg);
+  line-height: 0.95;
 }
 
 .topline {
