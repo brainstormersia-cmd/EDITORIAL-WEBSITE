@@ -1,0 +1,16 @@
+---
+const { items } = Astro.props;
+---
+<div class="border border-border bg-white p-6">
+  <p class="text-xs uppercase tracking-[0.35em] text-muted">Scelte della redazione</p>
+  <ol class="mt-4 space-y-3 text-sm">
+    {items.map((item, index) => (
+      <li class="flex items-start gap-3" key={item.slug}>
+        <span class="text-accent font-semibold">{String(index + 1).padStart(2, "0")}</span>
+        <a href={`/article/${item.slug}`} class="hover:underline">
+          {item.data.title}
+        </a>
+      </li>
+    ))}
+  </ol>
+</div>

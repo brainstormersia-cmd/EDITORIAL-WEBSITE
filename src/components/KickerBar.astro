@@ -1,0 +1,7 @@
+---
+const { label, variant = "default" } = Astro.props;
+const variantClass = variant === "compact" ? "kicker-bar kicker-bar--compact" : "kicker-bar";
+---
+<div class={variantClass}>
+  <span class="kicker-pill text-xs uppercase tracking-[0.35em] font-semibold">{label}</span>
+</div>
