@@ -1,0 +1,11 @@
+---
+import { renderKw } from "../utils/renderKw";
+
+const { text } = Astro.props;
+---
+{text && (
+  <div class="rookie-lens">
+    <p class="text-xs uppercase tracking-[0.35em] text-muted">LENTE ROOKIE</p>
+    <p class="text-sm" set:html={renderKw(text)} />
+  </div>
+)}

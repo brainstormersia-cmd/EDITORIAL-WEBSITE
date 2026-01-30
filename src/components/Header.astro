@@ -1,34 +1,43 @@
 ---
 import LogoMark from "./LogoMark.astro";
+import TopTicker from "./TopTicker.astro";
+import SearchModal from "./SearchModal.astro";
 ---
-<header class="sticky top-0 z-50 bg-bg border-b border-border">
-  <div class="topline text-xs uppercase tracking-[0.2em]">
-    <div class="container flex items-center justify-between py-2">
-      <span>Market snapshot: dati in aggiornamento</span>
-      <a href="/blog" class="text-xs hover:text-accent">Ultime notizie</a>
+<header class="site-header sticky top-0 z-50 border-b border-border bg-bg">
+  <TopTicker />
+  <div class="header-inner container py-6">
+    <div class="header-main">
+      <div class="header-brand">
+        <LogoMark />
+      </div>
+      <div class="header-nav-wrap">
+        <nav class="header-nav text-xs font-medium uppercase tracking-[0.35em]">
+          <a href="/category/finanza">Finanza</a>
+          <a href="/category/economia">Economia</a>
+          <a href="/category/notizie">Notizie</a>
+          <a href="/category/analisi">Analisi</a>
+          <a href="/category/trending">Trending</a>
+        </nav>
+        <button
+          class="search-button"
+          data-search-trigger
+          aria-haspopup="dialog"
+          aria-label="Apri la ricerca"
+        >
+          <span aria-hidden="true">⌕</span>
+        </button>
+      </div>
     </div>
   </div>
-  <div class="container py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-    <div class="flex items-center gap-6">
-      <LogoMark />
-      <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold uppercase tracking-widest">
-        <a href="/category/finanza" class="hover:text-accent">Finanza</a>
-        <a href="/category/economia" class="hover:text-accent">Economia</a>
-        <a href="/category/notizie" class="hover:text-accent">Notizie</a>
-        <a href="/category/analisi" class="hover:text-accent">Analisi</a>
-        <a href="/blog" class="hover:text-accent">Trending</a>
-      </nav>
-    </div>
-    <div class="flex items-center gap-3">
-      <label class="relative w-full max-w-sm">
-        <span class="sr-only">Cerca</span>
-        <input
-          type="search"
-          placeholder="Cerca finance insights"
-          class="w-full border border-border px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent"
-        />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-muted">⌕</span>
-      </label>
-    </div>
-  </div>
+  <SearchModal />
 </header>
+
+<script>
+  const header = document.querySelector(".site-header");
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle("header--scrolled", window.scrollY > 24);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

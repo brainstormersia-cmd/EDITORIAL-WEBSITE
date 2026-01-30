@@ -1,0 +1,34 @@
+---
+import KickerBar from "./KickerBar.astro";
+import HeroMedia from "./HeroMedia.astro";
+import BylineRow from "./BylineRow.astro";
+import WhyItMattersCompact from "./WhyItMattersCompact.astro";
+import RookieLens from "./RookieLens.astro";
+import { renderKw } from "../utils/renderKw";
+
+const { article } = Astro.props;
+const { title, dek, category, whyItMatters, impact, heroImage, author, readTime, date, rookieLens } = article.data;
+---
+<section class="grid gap-16 lg:grid-cols-12 lg:gap-[var(--grid-gap)] items-center">
+  <div class="lg:col-span-7">
+    <HeroMedia heroImage={heroImage} title={title} dek={dek} variant="hero" />
+  </div>
+  <div class="space-y-7 lg:col-span-5">
+    <KickerBar label={category.label} />
+    <h1 class="font-heading text-4xl md:text-5xl font-black leading-[1.08] tracking-[-0.02em] max-w-[19ch]">
+      {title}
+    </h1>
+    <p class="dek text-lg text-muted max-w-[52ch]" set:html={renderKw(dek)} />
+    <BylineRow author={author} date={date} readTime={readTime} />
+    <WhyItMattersCompact points={whyItMatters} impact={impact} mode="home" />
+    <RookieLens text={rookieLens} />
+    <div class="flex flex-wrap gap-3">
+      <a href={`/article/${article.slug}`} class="bg-fg text-bg px-6 py-3 text-xs uppercase tracking-[0.35em]">
+        Leggi ora
+      </a>
+      <a href="/category/analisi" class="border border-border px-6 py-3 text-xs uppercase tracking-[0.35em]">
+        Vai alle analisi
+      </a>
+    </div>
+  </div>
+</section>

@@ -17,7 +17,8 @@ export default {
         fg: "var(--color-fg)",
         accent: "var(--color-accent)",
         muted: "var(--color-muted)",
-        border: "var(--color-border)"
+        border: "var(--color-border)",
+        "bg-alt": "var(--color-bg-alt)"
       },
       fontFamily: {
         heading: "var(--font-heading)",

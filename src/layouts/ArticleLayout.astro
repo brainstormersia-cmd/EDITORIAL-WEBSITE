@@ -1,0 +1,109 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import BylineRow from "../components/BylineRow.astro";
+import NewsletterBox from "../components/NewsletterBox.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import CollapsibleSection from "../components/CollapsibleSection.astro";
+import WhyItMattersCompact from "../components/WhyItMattersCompact.astro";
+import RookieLens from "../components/RookieLens.astro";
+import KickerBar from "../components/KickerBar.astro";
+import HeroMedia from "../components/HeroMedia.astro";
+import TOCBox from "../components/TOCBox.astro";
+import { renderKw } from "../utils/renderKw";
+
+const { article, headings = [], related = [], prev, next } = Astro.props;
+const {
+  title,
+  dek,
+  date,
+  category,
+  author,
+  readTime,
+  heroImage,
+  whyItMatters,
+  impact,
+  doNow,
+  rookieLens,
+  sources
+} = article.data;
+---
+<BaseLayout title={title} description={dek} image={heroImage.src}>
+  <div class="reading-progress" id="reading-progress"></div>
+  <article class="container section-block">
+    <div class="grid gap-12">
+      <div class="article-main">
+        <header class="article-header">
+          <KickerBar label={category.label} />
+          <h1 class="article-title font-heading text-4xl md:text-5xl font-black leading-[1.1] tracking-[-0.02em]">
+            {title}
+          </h1>
+          <p class="dek text-lg text-muted" set:html={renderKw(dek)} />
+          <BylineRow author={author} date={date} readTime={readTime} />
+        </header>
+
+        <div class="article-hero">
+          <HeroMedia heroImage={heroImage} title={title} dek={dek} />
+        </div>
+
+        <WhyItMattersCompact points={whyItMatters} impact={impact} doNow={doNow} mode="article" />
+        <RookieLens text={rookieLens} />
+
+        <CollapsibleSection title="In questo articolo" class="lg:hidden">
+          <TOCBox headings={headings} mode="mobile" />
+        </CollapsibleSection>
+        <CollapsibleSection title="In questo articolo" class="hidden lg:block" open>
+          <TOCBox headings={headings} mode="mobile" />
+        </CollapsibleSection>
+
+        <div class="prose article-prose">
+          <slot />
+        </div>
+
+        <CollapsibleSection title="Fonti & Metodologia">
+          <ul class="space-y-3 text-sm">
+            {sources?.map((source) => (
+              <li key={source.url}>
+                <a href={source.url} class="underline">{source.title}</a>
+                <span class="text-muted"> · {new URL(source.url).hostname} · {source.date}</span>
+              </li>
+            ))}
+          </ul>
+        </CollapsibleSection>
+
+        <section>
+          <h2 class="font-heading text-2xl">Articoli correlati</h2>
+          <div class="mt-6 grid gap-6 md:grid-cols-2">
+            {related.map((item) => (
+              <ArticleCard article={item} key={item.slug} />
+            ))}
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-4 text-xs uppercase tracking-[0.35em] text-muted md:flex-row md:items-center md:justify-between">
+          {prev ? (
+            <a href={`/article/${prev.slug}`} class="hover:text-accent">← {prev.data.title}</a>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <a href={`/article/${next.slug}`} class="hover:text-accent">{next.data.title} →</a>
+          ) : (
+            <span />
+          )}
+        </div>
+      </div>
+    </div>
+  </article>
+  <script>
+    const progressBar = document.getElementById("reading-progress");
+    const updateProgress = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      const progress = scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0;
+      if (progressBar) {
+        progressBar.style.transform = `scaleX(${progress})`;
+      }
+    };
+    updateProgress();
+    document.addEventListener("scroll", updateProgress, { passive: true });
+  </script>
+</BaseLayout>

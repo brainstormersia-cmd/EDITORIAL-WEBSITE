@@ -1,0 +1,29 @@
+---
+import KickerBar from "./KickerBar.astro";
+import { renderKw } from "../utils/renderKw";
+
+const { article, variant = "default" } = Astro.props;
+const { title, dek, date, category, heroImage, readTime } = article.data;
+const formattedDate = new Intl.DateTimeFormat("it-IT", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric"
+}).format(date);
+---
+<article class="border border-border bg-white">
+  <a href={`/article/${article.slug}`} class="block">
+    <img src={heroImage.src} alt={heroImage.alt} class="h-48 w-full object-cover" loading="lazy" />
+    <div class="p-5 space-y-3">
+      {variant === "featured" ? (
+        <KickerBar label={category.label} variant="compact" />
+      ) : (
+        <span class="text-xs uppercase tracking-[0.35em] text-muted">{category.label}</span>
+      )}
+      <h3 class="font-heading text-2xl font-bold leading-tight">{title}</h3>
+      <p class="dek text-sm text-muted" set:html={renderKw(dek)} />
+      <div class="text-[0.7rem] uppercase tracking-[0.35em] text-muted">
+        {formattedDate} · {readTime} min lettura
+      </div>
+    </div>
+  </a>
+</article>

@@ -1,32 +1,40 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import SectionHeader from "../../components/SectionHeader.astro";
-import PostCard from "../../components/PostCard.astro";
+import ArticleGrid from "../../components/ArticleGrid.astro";
 import { getCollection } from "astro:content";
-import { getImageByName } from "../../utils/imageMap";
-import { slugify } from "../../utils/slug";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  const categories = Array.from(new Set(posts.map((post) => post.data.category)));
+  const articles = await getCollection("articles");
+  const categories = Array.from(
+    new Map(articles.map((article) => [article.data.category.slug, article.data.category])).values()
+  );
   return categories.map((category) => ({
-    params: { slug: slugify(category) },
+    params: { slug: category.slug },
     props: { category }
   }));
 }
 
 const { category } = Astro.props;
-const posts = (await getCollection("blog"))
-  .filter((post) => post.data.category === category)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const articles = (await getCollection("articles"))
+  .filter((article) => !article.data.draft && article.data.category.slug === category.slug)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const descriptions = {
+  finanza: "Mercati, portafogli e strumenti per capire il denaro.",
+  economia: "Dati macro, supply chain e trend dell’economia reale.",
+  notizie: "Aggiornamenti rapidi su fintech, business e policy.",
+  analisi: "Letture approfondite e scenari di medio periodo.",
+  trending: "I temi più discussi della settimana."
+};
+const categoryDescription = descriptions[category.slug] ?? `Articoli su ${category.label}.`;
 ---
-<BaseLayout title={category} description={`Articoli su ${category} in FinanceRookie.`}>
-  <div class="container py-12 space-y-10">
-    <SectionHeader title={category} linkText="Archivio" linkHref="/blog" />
-    <div class="grid gap-6 md:grid-cols-2">
-      {posts.map((post) => (
-        <PostCard post={post} image={getImageByName(post.data.mainImage)} />
-      ))}
-    </div>
+<BaseLayout title={category.label} description={`Articoli su ${category.label} in FinanceRookie.`}>
+  <div class="container section-block space-y-10">
+    <header class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.35em] text-muted">Categoria</p>
+      <h1 class="font-heading text-4xl">{category.label}</h1>
+      <p class="text-muted max-w-[60ch]">{categoryDescription}</p>
+      <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">Archivio</a>
+    </header>
+    <ArticleGrid articles={articles} />
   </div>
 </BaseLayout>

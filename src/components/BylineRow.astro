@@ -1,0 +1,55 @@
+---
+import { readingTime } from "../utils/readingTime";
+
+const { author, date, readTime, content } = Astro.props;
+const safeAuthor = author?.name?.trim() ? author.name : "Redazione FinanceRookie";
+const avatar = author?.avatarUrl ?? "/images/avatar-redazione.svg";
+const time = typeof readTime === "number" ? `${readTime} min lettura` : readTime ?? readingTime(content ?? "");
+const formattedDate = new Date(date).toLocaleDateString("it-IT", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+---
+<div class="byline-row flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div class="flex items-center gap-3">
+    <img
+      src={avatar}
+      alt={safeAuthor}
+      class="h-9 w-9 rounded-full border border-border object-cover"
+      width="36"
+      height="36"
+      loading="lazy"
+    />
+    <div>
+      <p class="text-sm font-semibold">{safeAuthor}</p>
+      <p class="text-xs text-muted uppercase tracking-[0.3em]">{formattedDate} · {time}</p>
+    </div>
+  </div>
+  <div class="byline-actions hidden md:flex items-center gap-3 text-muted">
+    <button
+      class="icon-button"
+      aria-label="Condividi"
+      type="button"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M16 5a3 3 0 1 1-2.83 4H9.92a3.5 3.5 0 0 0 0 6h3.25a3 3 0 1 1-.01 2H9.92a5.5 5.5 0 1 1 0-11h3.25A3 3 0 0 1 16 5Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+    <button
+      class="icon-button"
+      aria-label="Salva"
+      type="button"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

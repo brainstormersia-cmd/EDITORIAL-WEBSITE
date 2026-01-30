@@ -1,0 +1,35 @@
+---
+const modalId = "search-modal";
+---
+<dialog id={modalId} class="backdrop:bg-black/60 max-w-xl w-[92vw] border border-border p-0 rounded-none">
+  <form method="dialog" class="bg-bg p-6" aria-label="Ricerca">
+    <div class="flex items-center justify-between">
+      <h2 class="font-heading text-2xl">Cerca nel magazine</h2>
+      <button class="text-sm uppercase tracking-[0.3em] text-muted" aria-label="Chiudi">Chiudi</button>
+    </div>
+    <div class="mt-6">
+      <label class="text-xs uppercase tracking-[0.3em] text-muted">Parole chiave</label>
+      <input
+        type="search"
+        placeholder="Mercati, tassi, startup..."
+        class="mt-2 w-full border border-border bg-white px-4 py-3 text-sm focus:border-accent focus:ring-2 focus:ring-accent"
+      />
+    </div>
+    <p class="mt-4 text-xs text-muted">Premi ESC per chiudere o invio per cercare.</p>
+  </form>
+</dialog>
+
+<script>
+  const dialog = document.getElementById("search-modal");
+  const triggers = document.querySelectorAll("[data-search-trigger]");
+
+  if (dialog && triggers.length) {
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        if (typeof dialog.showModal === "function") {
+          dialog.showModal();
+        }
+      });
+    });
+  }
+</script>
