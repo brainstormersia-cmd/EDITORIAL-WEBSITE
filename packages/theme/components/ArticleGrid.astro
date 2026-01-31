@@ -1,0 +1,19 @@
+---
+import ArticleCard from "./ArticleCard.astro";
+import { readingTime } from "../utils/readingTime";
+
+const { articles, variant = "default", getCategoryLabel, getReadTime } = Astro.props;
+const resolveCategory = getCategoryLabel ?? ((slug) => slug);
+const resolveReadTime = getReadTime ?? ((article) => readingTime(article.body ?? ""));
+---
+<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  {articles.map((article) => (
+    <ArticleCard
+      article={article}
+      variant={variant}
+      categoryLabel={resolveCategory(article.data.category)}
+      readTime={resolveReadTime(article)}
+      key={article.slug}
+    />
+  ))}
+</div>

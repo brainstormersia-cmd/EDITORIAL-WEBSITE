@@ -1,0 +1,49 @@
+name: Content ingest
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "content/inbox/*.json"
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - name: Install Python deps
+        run: pip install -r packages/scripts/requirements.txt
+      - name: Enable corepack
+        run: corepack enable
+      - name: Force npm registry
+        run: pnpm config set registry https://registry.npmjs.org/
+      - name: Install Node deps
+        run: pnpm install --frozen-lockfile
+      - name: Ingest JSON
+        run: python packages/scripts/fr_cli.py import-json --input content/inbox/*.json --site finance-rookie
+      - name: Archive JSON
+        run: |
+          mkdir -p content/processed
+          for file in content/inbox/*.json; do
+            [ -e "$file" ] || continue
+            mv "$file" "content/processed/$(basename "$file")"
+          done
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Ingest content JSON"
+          title: "Content ingest"
+          body: "Automated content ingest from content/inbox/*.json."
+          branch: content/auto-${{ github.run_id }}
+          base: main
+          delete-branch: true

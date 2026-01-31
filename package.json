@@ -1,24 +1,17 @@
 {
-  "name": "financerookie",
-  "type": "module",
-  "version": "0.1.0",
+  "name": "financerookie-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
-  },
-  "dependencies": {
-    "@astrojs/rss": "^4.0.1",
-    "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/tailwind": "^5.1.0",
-    "@tailwindcss/typography": "^0.5.15",
-    "astro": "^4.16.3",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13",
-    "unist-util-visit": "^5.0.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.6.3"
+    "dev": "npm run dev -w @financerookie/app",
+    "build": "npm run build -w @financerookie/app",
+    "build:finance-rookie": "npm run build -w @financerookie/app",
+    "preview": "npm run preview -w @financerookie/app",
+    "preview:finance-rookie": "npm run preview -w @financerookie/app",
+    "validate": "python packages/scripts/fr_cli.py validate"
   }
 }

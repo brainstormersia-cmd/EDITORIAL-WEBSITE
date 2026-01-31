@@ -1,0 +1,29 @@
+---
+import "@theme/styles/global.css";
+import { SITE_CONFIG } from "../site.config";
+import MetaHead from "@theme/components/MetaHead.astro";
+import Header from "@theme/components/Header.astro";
+import Footer from "@theme/components/Footer.astro";
+
+const { title, description, image, canonical, type } = Astro.props;
+---
+<!doctype html>
+<html lang={SITE_CONFIG.locale}>
+  <head>
+    <MetaHead
+      title={title}
+      description={description}
+      image={image}
+      canonical={canonical}
+      type={type}
+      siteConfig={SITE_CONFIG}
+    />
+  </head>
+  <body class="bg-bg text-fg" data-debug-grid={import.meta.env.DEV ? "1" : undefined}>
+    <Header siteConfig={SITE_CONFIG} />
+    <main class="min-h-screen">
+      <slot />
+    </main>
+    <Footer siteConfig={SITE_CONFIG} />
+  </body>
+</html>

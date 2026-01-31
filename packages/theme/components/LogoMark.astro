@@ -1,0 +1,10 @@
+---
+const { siteConfig } = Astro.props;
+---
+<a href="/" class="logo-lockup flex flex-col leading-none text-left">
+  <span class="brand text-4xl md:text-5xl font-black tracking-tight font-heading">
+    <span>{siteConfig.logoParts?.primary ?? siteConfig.logoText}</span>
+    {siteConfig.logoParts?.accent && <span class="rookie">{siteConfig.logoParts.accent}</span>}
+  </span>
+  <span class="text-[0.65rem] uppercase tracking-[0.4em] text-muted">Magazine</span>
+</a>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Pagina non trovata" description="La pagina richiesta non è disponibile.">
+  <div class="container section-block space-y-6">
+    <p class="text-xs uppercase tracking-[0.35em] text-muted">404</p>
+    <h1 class="font-heading text-4xl">Pagina non trovata</h1>
+    <p class="text-muted max-w-[60ch]">
+      Il contenuto che cerchi non è disponibile. Torna alla home o esplora l’archivio.
+    </p>
+    <div class="flex gap-4 text-xs uppercase tracking-[0.35em]">
+      <a href="/" class="border border-border px-4 py-2">Home</a>
+      <a href="/blog" class="border border-border px-4 py-2">Archivio</a>
+    </div>
+  </div>
+</BaseLayout>

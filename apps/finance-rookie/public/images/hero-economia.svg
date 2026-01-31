@@ -1,0 +1,6 @@
+<svg width="1200" height="680" viewBox="0 0 1200 680" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="680" fill="#F7F7F7"/>
+  <path d="M120 420H1080" stroke="#000" stroke-width="2"/>
+  <text x="120" y="340" font-family="Playfair Display, serif" font-size="72" fill="#000">Economia reale</text>
+  <text x="120" y="390" font-family="Inter, sans-serif" font-size="28" fill="#6B7280">Logistica, supply chain, consumi</text>
+</svg>

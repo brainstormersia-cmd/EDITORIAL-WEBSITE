@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleGrid from "@theme/components/ArticleGrid.astro";
+import { getCollection } from "astro:content";
+import { SITE_CONFIG } from "../../site.config";
+
+export async function getStaticPaths() {
+  return SITE_CONFIG.categories.map((category) => ({
+    params: { slug: category.slug },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+const articles = (await getCollection("articles"))
+  .filter((article) => article.data.status === "published")
+  .filter((article) => article.data.category === category.slug)
+  .filter((article) => !article.data.published_at || new Date(article.data.published_at) <= new Date())
+  .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
+const descriptions = {
+  finanza: "Mercati, portafogli e strumenti per capire il denaro.",
+  economia: "Dati macro, supply chain e trend dell’economia reale.",
+  notizie: "Aggiornamenti rapidi su fintech, business e policy.",
+  analisi: "Letture approfondite e scenari di medio periodo.",
+  trending: "I temi più discussi della settimana."
+};
+const categoryDescription = descriptions[category.slug] ?? `Articoli su ${category.label}.`;
+const getCategoryLabel = (slug) =>
+  SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
+---
+<BaseLayout title={category.label} description={`Articoli su ${category.label} in FinanceRookie.`}>
+  <div class="container section-block space-y-10">
+    <header class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.35em] text-muted">Categoria</p>
+      <h1 class="font-heading text-4xl">{category.label}</h1>
+      <p class="text-muted max-w-[60ch]">{categoryDescription}</p>
+      <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">Archivio</a>
+    </header>
+    <ArticleGrid articles={articles} getCategoryLabel={getCategoryLabel} />
+  </div>
+</BaseLayout>
