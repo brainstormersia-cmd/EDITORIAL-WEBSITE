@@ -1,0 +1,58 @@
+---
+import KickerBar from "./KickerBar.astro";
+import HeroMedia from "./HeroMedia.astro";
+import BylineRow from "./BylineRow.astro";
+import WhyItMattersCompact from "./WhyItMattersCompact.astro";
+import RookieLens from "./RookieLens.astro";
+import { renderKw } from "../utils/renderKw";
+
+const { article, author, readTime, categoryLabel } = Astro.props;
+const {
+  title,
+  excerpt,
+  category,
+  takeaways,
+  impact,
+  hero_image,
+  hero_alt,
+  hero_caption,
+  hero_source,
+  published_at,
+  updated_at,
+  rookie_lens,
+  do_now
+} = article.data;
+const heroImage = hero_image
+  ? {
+      src: hero_image,
+      alt: hero_alt ?? title,
+      caption: hero_caption ?? "",
+      sourceUrl: hero_source
+    }
+  : null;
+const displayDate = published_at ?? updated_at ?? new Date().toISOString();
+const label = categoryLabel ?? category;
+---
+<section class="grid-12 items-center">
+  <div class="col-12 lg-col-7">
+    <HeroMedia heroImage={heroImage} title={title} dek={excerpt} variant="hero" />
+  </div>
+  <div class="col-12 space-y-7 lg-col-5">
+    <KickerBar label={label} />
+    <h1 class="font-heading text-4xl md:text-5xl font-black leading-[1.08] tracking-[-0.02em] max-w-[19ch]">
+      {title}
+    </h1>
+    <p class="dek text-lg text-muted max-w-[52ch]" set:html={renderKw(excerpt)} />
+    <BylineRow author={author} date={displayDate} readTime={readTime} />
+    <WhyItMattersCompact takeaways={takeaways} impact={impact} doNow={do_now} mode="home" />
+    <RookieLens text={rookie_lens} />
+    <div class="flex flex-wrap gap-3">
+      <a href={`/article/${article.slug}`} class="bg-fg text-bg px-6 py-3 text-xs uppercase tracking-[0.35em]">
+        Leggi ora
+      </a>
+      <a href="/category/analisi" class="border border-border px-6 py-3 text-xs uppercase tracking-[0.35em]">
+        Vai alle analisi
+      </a>
+    </div>
+  </div>
+</section>

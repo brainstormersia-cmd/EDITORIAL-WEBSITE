@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Python deps
+        run: pip install -r packages/scripts/requirements.txt
+      - name: Enable corepack
+        run: corepack enable
+      - name: Force npm registry
+        run: pnpm config set registry https://registry.npmjs.org/
+      - name: Install Node deps
+        run: pnpm install --frozen-lockfile
+      - name: Validate content
+        run: python packages/scripts/fr_cli.py validate --site finance-rookie
+      - name: Build app
+        run: pnpm -C apps/finance-rookie build

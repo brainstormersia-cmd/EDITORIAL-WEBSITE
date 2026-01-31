@@ -1,0 +1,25 @@
+---
+const { siteConfig } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-border mt-16">
+  <div class="container py-10 grid gap-6 md:grid-cols-2">
+    <div>
+      <h2 class="text-2xl font-heading">{siteConfig.name}</h2>
+      <p class="mt-2 text-sm text-muted max-w-md">
+        {siteConfig.description}
+      </p>
+    </div>
+    <div class="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-muted">
+      <a href="/blog" class="hover:text-accent">Archivio</a>
+      <a href="/category/analisi" class="hover:text-accent">Analisi</a>
+      <a href="/rss.xml" class="hover:text-accent">RSS</a>
+    </div>
+  </div>
+  <div class="border-t border-border">
+    <div class="container py-4 text-xs text-muted flex items-center justify-between">
+      <span>© {year} {siteConfig.name}. Tutti i diritti riservati.</span>
+      <span>Cloudflare Pages ready</span>
+    </div>
+  </div>
+</footer>

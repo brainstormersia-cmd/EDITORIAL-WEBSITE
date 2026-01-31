@@ -1,0 +1,42 @@
+---
+import CollapsibleSection from "./CollapsibleSection.astro";
+import { renderKw } from "../utils/renderKw";
+
+const { takeaways = [], impact, doNow = [], mode = "article" } = Astro.props;
+const maxPoints = 2;
+const trimmedPoints = takeaways.slice(0, maxPoints);
+const trimmedDoNow = mode === "article" ? doNow.slice(0, 2) : [];
+const title = "In 20 secondi";
+const isOpen = mode === "home";
+---
+<div class:list={["why-compact", mode === "article" && "why-compact--article"]}>
+  <CollapsibleSection title={title} open={isOpen} variant="subtle">
+    <ul class="space-y-2 text-sm">
+    {trimmedPoints.map((item, index) => (
+        <li class="flex gap-3" key={item}>
+          <span class="text-muted">{String(index + 1).padStart(2, "0")}</span>
+          <span set:html={renderKw(item)} />
+        </li>
+      ))}
+    </ul>
+    {impact && (
+      <p class="mt-3 text-xs text-muted uppercase tracking-[0.2em]">
+        <span class="font-semibold text-fg">Impatto:</span>
+        <span class="ml-2" set:html={renderKw(impact)} />
+      </p>
+    )}
+    {trimmedDoNow.length > 0 && (
+      <div class="mt-4 text-sm">
+        <p class="meta-label text-muted">Cosa fare ora</p>
+        <ul class="mt-2 space-y-1">
+          {trimmedDoNow.map((item) => (
+            <li class="flex gap-2" key={item}>
+              <span aria-hidden="true">•</span>
+              <span set:html={renderKw(item)} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </CollapsibleSection>
+</div>

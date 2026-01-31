@@ -1,0 +1,6 @@
+{
+  "site": "finance-rookie",
+  "name": "FinanceRookie",
+  "categories": ["finanza", "economia", "notizie", "analisi", "trending"],
+  "default_author_id": "redazione"
+}

@@ -1,0 +1,26 @@
+---
+const { headings = [], mode = "desktop" } = Astro.props;
+---
+{mode === "mobile" ? (
+  <details class="border border-border p-4">
+    <summary class="text-xs uppercase tracking-[0.35em] text-muted">In questo articolo</summary>
+    <ul class="mt-3 space-y-2 text-sm">
+      {headings.map((heading) => (
+        <li key={heading.slug}>
+          <a href={`#${heading.slug}`} class="hover:underline">{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </details>
+) : (
+  <div class="toc-box">
+    <p class="text-xs uppercase tracking-[0.35em] text-muted">In questo articolo</p>
+    <ul class="mt-4 space-y-2 text-sm">
+      {headings.map((heading) => (
+        <li key={heading.slug}>
+          <a href={`#${heading.slug}`} class="hover:underline">{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}

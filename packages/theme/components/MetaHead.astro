@@ -1,0 +1,42 @@
+---
+const {
+  siteConfig,
+  title,
+  description,
+  image = "/logo.svg",
+  canonical,
+  type = "website"
+} = Astro.props;
+
+const resolvedTitle = title ?? siteConfig.name;
+const resolvedDescription = description ?? siteConfig.description;
+const pageTitle = resolvedTitle === siteConfig.name ? resolvedTitle : `${resolvedTitle} | ${siteConfig.name}`;
+const canonicalUrl = canonical ?? siteConfig.siteUrl;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;800;900&display=swap"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;800;900&display=swap"
+  rel="stylesheet"
+/>
+<link rel="canonical" href={canonicalUrl} />
+<title>{pageTitle}</title>
+<meta name="description" content={resolvedDescription} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={resolvedDescription} />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={siteConfig.locale} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={image} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<link rel="icon" href="/logo.svg" type="image/svg+xml" />
