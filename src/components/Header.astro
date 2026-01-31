@@ -1,0 +1,43 @@
+---
+import LogoMark from "./LogoMark.astro";
+import TopTicker from "./TopTicker.astro";
+import SearchModal from "./SearchModal.astro";
+---
+<header class="site-header sticky top-0 z-50 border-b border-border bg-bg">
+  <TopTicker />
+  <div class="header-inner container py-6">
+    <div class="header-main">
+      <div class="header-brand">
+        <LogoMark />
+      </div>
+      <div class="header-nav-wrap">
+        <nav class="header-nav text-xs font-medium uppercase tracking-[0.35em]">
+          <a href="/category/finanza">Finanza</a>
+          <a href="/category/economia">Economia</a>
+          <a href="/category/notizie">Notizie</a>
+          <a href="/category/analisi">Analisi</a>
+          <a href="/category/trending">Trending</a>
+        </nav>
+        <button
+          class="search-button"
+          data-search-trigger
+          aria-haspopup="dialog"
+          aria-label="Apri la ricerca"
+        >
+          <span aria-hidden="true">⌕</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <SearchModal />
+</header>
+
+<script>
+  const header = document.querySelector(".site-header");
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle("header--scrolled", window.scrollY > 24);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>
