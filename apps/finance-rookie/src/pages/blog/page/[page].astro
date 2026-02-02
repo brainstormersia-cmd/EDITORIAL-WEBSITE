@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ArticleGrid from "@theme/components/ArticleGrid.astro";
+import { getCollection } from "astro:content";
+import { SITE_CONFIG } from "../../../site.config";
+
+export async function getStaticPaths({ paginate }) {
+  const articles = (await getCollection("articles"))
+    .filter((article) => article.data.status === "published")
+    .filter((article) => !article.data.published_at || new Date(article.data.published_at) <= new Date())
+    .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
+  return paginate(articles, { pageSize: 9 });
+}
+
+const { page } = Astro.props;
+const categories = SITE_CONFIG.categories;
+const getCategoryLabel = (slug) =>
+  SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
+---
+<BaseLayout title="Archivio" description="Tutti gli articoli di FinanceRookie.">
+  <div class="container section-block space-y-10">
+    <header class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.35em] text-muted">Blog</p>
+      <h1 class="font-heading text-4xl">Archivio completo</h1>
+      <p class="text-muted max-w-[60ch]">
+        Tutti gli articoli, organizzati per categoria. Usa la ricerca per trovare argomenti specifici.
+      </p>
+    </header>
+    <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em]">
+      {categories.map((category) => (
+        <a
+          href={`/category/${category.slug}`}
+          class="border border-border px-3 py-2 hover:border-accent"
+        >
+          {category.label}
+        </a>
+      ))}
+    </div>
+    <div>
+      <ArticleGrid articles={page.data} getCategoryLabel={getCategoryLabel} />
+    </div>
+    <div class="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-muted">
+      {page.url.prev ? <a href={page.url.prev}>← Precedenti</a> : <span />}
+      <span>Pagina {page.currentPage} di {page.lastPage}</span>
+      {page.url.next ? <a href={page.url.next}>Successivi →</a> : <span />}
+    </div>
+  </div>
+</BaseLayout>

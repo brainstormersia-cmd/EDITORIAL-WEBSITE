@@ -1,0 +1,34 @@
+---
+const { heroImage, title, dek, variant = "default" } = Astro.props;
+const hasImage = heroImage?.src;
+const wrapperClass = variant === "hero" ? "hero-media hero-media--hero" : "hero-media";
+---
+<div class={wrapperClass}>
+  {hasImage ? (
+    <figure class="border border-border bg-white">
+      <img
+        src={heroImage.src}
+        alt={heroImage.alt ?? title}
+        class="w-full object-cover"
+        width="1600"
+        height="900"
+        loading="lazy"
+      />
+      {heroImage?.caption && (
+        <figcaption class="px-4 py-3 text-xs text-muted">
+          {heroImage.caption}
+          {heroImage.sourceUrl && (
+            <a href={heroImage.sourceUrl} class="text-fg underline ml-1">Fonte immagine</a>
+          )}
+        </figcaption>
+      )}
+    </figure>
+  ) : (
+    <div class="border border-border bg-bg-alt p-6 space-y-3">
+      <p class="text-xs uppercase tracking-[0.35em] text-muted">Editorial cover</p>
+      {dek && <p class="text-sm text-muted">{dek}</p>}
+      <div class="h-px w-full bg-border" />
+      <p class="text-xs text-muted">Fonte immagine: archivio redazione</p>
+    </div>
+  )}
+</div>

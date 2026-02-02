@@ -1,0 +1,12 @@
+---
+const { title, open = false, class: className, variant = "default" } = Astro.props;
+---
+<details class:list={["collapsible", `collapsible--${variant}`, className]} open={open}>
+  <summary class="collapsible__summary">
+    <span>{title}</span>
+    <span class="collapsible__icon" aria-hidden="true">⌄</span>
+  </summary>
+  <div class="collapsible__content">
+    <slot />
+  </div>
+</details>

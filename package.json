@@ -1,0 +1,17 @@
+{
+  "name": "financerookie-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @financerookie/app",
+    "build": "npm run build -w @financerookie/app",
+    "build:finance-rookie": "npm run build -w @financerookie/app",
+    "preview": "npm run preview -w @financerookie/app",
+    "preview:finance-rookie": "npm run preview -w @financerookie/app",
+    "validate": "python packages/scripts/fr_cli.py validate"
+  }
+}
