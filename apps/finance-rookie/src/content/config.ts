@@ -19,6 +19,18 @@ const articles = defineCollection({
     published_at: z.coerce.date(),
     updated_at: z.coerce.date().optional(),
     featured: z.boolean().optional(),
+    breaking: z.boolean().optional(),
+    live: z.boolean().optional(),
+    superseded_by: z.string().optional(),
+    updates: z
+      .array(
+        z.object({
+          title: z.string(),
+          slug: z.string().optional(),
+          date: z.string().optional()
+        })
+      )
+      .optional(),
 
     hero_image: z.string().optional(),
     hero_alt: z.string().optional(),
@@ -34,7 +46,8 @@ const articles = defineCollection({
       z.object({
         title: z.string(),
         url: z.string().url(),
-        date: z.string().optional()
+        date: z.string().optional(),
+        publisher: z.string().optional()
       })
     ).optional()
   })

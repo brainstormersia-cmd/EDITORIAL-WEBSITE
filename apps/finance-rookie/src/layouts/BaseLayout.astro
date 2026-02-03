@@ -21,6 +21,7 @@ const showGrid = Astro.url.searchParams.get("grid") === "1";
       type={type}
       siteConfig={SITE_CONFIG}
     />
+    <slot name="head" />
   </head>
   <body class="bg-bg text-fg" data-debug-grid={showGrid ? "1" : undefined}>
     <Header siteConfig={SITE_CONFIG} />

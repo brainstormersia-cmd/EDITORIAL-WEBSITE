@@ -5,6 +5,7 @@ import TrendingRail from "@theme/components/TrendingRail.astro";
 import ArticleGrid from "@theme/components/ArticleGrid.astro";
 import NewsletterBox from "@theme/components/NewsletterBox.astro";
 import EditorsPicks from "@theme/components/EditorsPicks.astro";
+import BreakingBadge from "@theme/components/BreakingBadge.astro";
 import { getCollection } from "astro:content";
 import { SITE_CONFIG } from "../site.config";
 import { readingTime } from "@theme/utils/readingTime";
@@ -15,6 +16,7 @@ const articles = (await getCollection("articles"))
   .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
 const featuredItems = articles.filter((article) => article.data.featured);
 const featured = featuredItems[0] ?? articles[0];
+const breakingArticle = articles.find((article) => article.data.breaking);
 const trending = articles.slice(1, 4);
 const latest = articles.slice(0, 6);
 const latestPrimary = latest.slice(0, 2);
@@ -27,7 +29,15 @@ const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
 <BaseLayout title={SITE_CONFIG.name} description={SITE_CONFIG.description}>
-  <div class="container section-block space-y-12">
+  {breakingArticle && (
+    <section class="breaking-banner">
+      <div class="container breaking-banner-inner">
+        <BreakingBadge label="Breaking" variant="breaking" />
+        <span>AGGIORNAMENTO: {breakingArticle.data.title}</span>
+      </div>
+    </section>
+  )}
+  <div class="container section-block section-block--tight space-y-10">
     {featured && (
       <HeroFeatured
         article={featured}
@@ -38,7 +48,7 @@ const getCategoryLabel = (slug) =>
     )}
   </div>
 
-  <section class="trending-rail section-block">
+  <section class="trending-rail section-block section-block--tight">
     <div class="container space-y-6">
       <div class="flex items-end justify-between">
         <h2 class="font-heading text-3xl signature-underline font-bold">Trending ora</h2>
@@ -48,7 +58,7 @@ const getCategoryLabel = (slug) =>
     </div>
   </section>
 
-  <section class="section-block">
+  <section class="section-block section-block--tight">
     <div class="container grid gap-12 lg:grid-cols-[2fr,1fr]">
       <div class="space-y-8">
         <div class="flex items-end justify-between">
@@ -72,9 +82,9 @@ const getCategoryLabel = (slug) =>
     </div>
   </section>
 
-  <section class="section-block">
+  <section class="section-block section-block--tight">
     <div class="container grid gap-6 lg:grid-cols-3">
-      <div class="border border-border p-6 space-y-4">
+      <div class="home-category-card space-y-4">
         <h3 class="font-heading text-2xl signature-underline">Finanza</h3>
         <ul class="space-y-3 text-sm">
           {finanza.map((article) => (
@@ -87,7 +97,7 @@ const getCategoryLabel = (slug) =>
           Vedi tutti
         </a>
       </div>
-      <div class="border border-border p-6 space-y-4">
+      <div class="home-category-card space-y-4">
         <h3 class="font-heading text-2xl signature-underline">Economia</h3>
         <ul class="space-y-3 text-sm">
           {economia.map((article) => (
@@ -100,7 +110,7 @@ const getCategoryLabel = (slug) =>
           Vedi tutti
         </a>
       </div>
-      <div class="border border-border p-6 space-y-4">
+      <div class="home-category-card space-y-4">
         <h3 class="font-heading text-2xl signature-underline">Notizie</h3>
         <ul class="space-y-3 text-sm">
           {notizie.map((article) => (

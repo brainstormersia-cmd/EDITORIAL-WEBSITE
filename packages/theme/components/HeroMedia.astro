@@ -18,17 +18,19 @@ const wrapperClass = variant === "hero" ? "hero-media hero-media--hero" : "hero-
         <figcaption class="px-4 py-3 text-xs text-muted">
           {heroImage.caption}
           {heroImage.sourceUrl && (
-            <a href={heroImage.sourceUrl} class="text-fg underline ml-1">Fonte immagine</a>
+            <a href={heroImage.sourceUrl} class="text-fg underline ml-1">
+              Fonte: {new URL(heroImage.sourceUrl).hostname}
+            </a>
           )}
         </figcaption>
       )}
     </figure>
   ) : (
-    <div class="border border-border bg-bg-alt p-6 space-y-3">
-      <p class="text-xs uppercase tracking-[0.35em] text-muted">Editorial cover</p>
+    <div class="hero-cover border border-border bg-bg-alt p-6 space-y-3">
+      <p class="text-xs uppercase tracking-[0.35em] text-muted">Cover editoriale</p>
       {dek && <p class="text-sm text-muted">{dek}</p>}
       <div class="h-px w-full bg-border" />
-      <p class="text-xs text-muted">Fonte immagine: archivio redazione</p>
+      <p class="text-xs text-muted">FinanceRookie Editorial Desk</p>
     </div>
   )}
 </div>

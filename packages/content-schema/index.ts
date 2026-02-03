@@ -13,6 +13,18 @@ export const createArticleSchema = (categories: readonly string[]) =>
       status: z.enum(ARTICLE_STATUSES),
       published_at: z.string().datetime().optional(),
       updated_at: z.string().datetime().optional(),
+      breaking: z.boolean().optional(),
+      live: z.boolean().optional(),
+      superseded_by: z.string().optional(),
+      updates: z
+        .array(
+          z.object({
+            title: z.string(),
+            slug: z.string().optional(),
+            date: z.string().optional()
+          })
+        )
+        .optional(),
       hero_image: z.string().optional(),
       hero_alt: z.string().optional(),
       hero_caption: z.string().optional(),

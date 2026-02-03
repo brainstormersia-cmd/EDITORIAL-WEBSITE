@@ -4,6 +4,7 @@ import HeroMedia from "./HeroMedia.astro";
 import BylineRow from "./BylineRow.astro";
 import WhyItMattersCompact from "./WhyItMattersCompact.astro";
 import RookieLens from "./RookieLens.astro";
+import BreakingBadge from "./BreakingBadge.astro";
 import { renderKw } from "../utils/renderKw";
 
 const { article, author, readTime, categoryLabel } = Astro.props;
@@ -32,10 +33,26 @@ const heroImage = hero_image
   : null;
 const displayDate = published_at ?? updated_at ?? new Date().toISOString();
 const label = categoryLabel ?? category;
+const isRecent = published_at
+  ? Date.now() - new Date(published_at).getTime() < 60 * 60 * 1000
+  : false;
+const showBreaking = Boolean(article.data.breaking);
+const showLive = Boolean(article.data.live);
 ---
 <section class="grid-12 items-center">
   <div class="col-12 lg-col-7">
-    <HeroMedia heroImage={heroImage} title={title} dek={excerpt} variant="hero" />
+    <div class="relative">
+      <HeroMedia heroImage={heroImage} title={title} dek={excerpt} variant="hero" />
+      {(showBreaking || showLive || isRecent) && (
+        <div class="absolute left-4 top-4 flex flex-wrap gap-2">
+          {showBreaking && <BreakingBadge label="Breaking" variant="breaking" />}
+          {showLive && <BreakingBadge label="Live" variant="live" />}
+          {!showBreaking && !showLive && isRecent && (
+            <BreakingBadge label="Appena pubblicato" variant="recent" />
+          )}
+        </div>
+      )}
+    </div>
   </div>
   <div class="col-12 space-y-7 lg-col-5">
     <KickerBar label={label} />
