@@ -29,7 +29,12 @@ export const SITE_CONFIG = {
       name: "Redazione FinanceRookie",
       avatarUrl: "/images/avatar-redazione.svg"
     }
-  }
+  },
+  socials: [
+    { label: "LinkedIn", href: "https://www.linkedin.com" },
+    { label: "X", href: "https://x.com" },
+    { label: "Instagram", href: "https://www.instagram.com" }
+  ]
 } as const;
 
 export type SiteConfig = typeof SITE_CONFIG;

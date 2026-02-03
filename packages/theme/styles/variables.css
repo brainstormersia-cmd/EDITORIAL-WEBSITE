@@ -14,7 +14,7 @@
 
   --radius-none: 0px;
   --container-max: 1120px;
-  --container-pad: clamp(16px, 3vw, 28px);
+  --container-pad: clamp(24px, 3vw, 36px);
   --grid-gap: clamp(16px, 2.5vw, 28px);
 
   --space-1: 4px;
@@ -28,6 +28,8 @@
   --section-y: clamp(40px, 6vw, 84px);
 
   --prose-max: 68ch;
+  --article-max: 45rem;
+  --article-hero-max: 45rem;
   --lh-tight: 1.08;
   --lh-body: 1.55;
 }

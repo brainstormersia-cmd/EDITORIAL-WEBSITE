@@ -1,0 +1,13 @@
+---
+const { label = "Breaking", variant = "breaking" } = Astro.props;
+const variantClass =
+  variant === "live"
+    ? "badge badge--live"
+    : variant === "recent"
+      ? "badge badge--recent"
+      : "badge badge--breaking";
+---
+<span class={variantClass}>
+  <span class="badge-dot" aria-hidden="true"></span>
+  {label}
+</span>
