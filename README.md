@@ -59,30 +59,47 @@ Stile centralizzato in:
 Gli articoli sono file Markdown in `apps/finance-rookie/src/content/articles/`.  
 Il **slug** è derivato dal nome file (es. `tassi-bce.md` → `/article/tassi-bce`).
 
-### Frontmatter (principale)
-Campi più usati (vedi schema completo nei file sopra):
+### Frontmatter (completo)
+Campi completi previsti (vedi schema completo nei file sopra):
 - `title` (string, 10–120) – titolo editoriale.
-- `excerpt` (string, 40–180) – sommario.
+- `excerpt` (string, 40–180) – sottotesto/riassunto.
 - `category` (enum) – slug categoria da `site.config.ts`.
 - `tags` (array) – massimo 8.
 - `author_id` (string) – autore da `site.config.ts`.
 - `status` (`draft` | `published`).
 - `published_at` (date ISO) – obbligatoria per `published`.
-- `hero_image`, `hero_alt`, `hero_caption`, `hero_source` – header.
+- `updated_at` (date ISO, opzionale) – ultima modifica.
+- `hero_image` (string, opzionale) – immagine principale (path in `public/` o URL).
+- `hero_alt` (string, opzionale) – alt text immagine.
+- `hero_caption` (string, opzionale) – didascalia immagine.
+- `hero_source` (URL, opzionale) – fonte immagine.
 - `takeaways` (max 3), `impact`, `do_now` (max 2), `rookie_lens`.
 - `sources` (array) – almeno 1 fonte (title + url).
 - `featured` (boolean).
 
-### Esempio minimo
+### Esempio completo
 ```md
 ---
 title: "Titolo articolo"
-excerpt: "Riassunto in 1-2 frasi."
+excerpt: "Sottotesto/riassunto in 1-2 frasi."
 category: "analisi"
 tags: ["tassi", "macro"]
 author_id: "redazione"
 status: "published"
 published_at: "2024-06-08T00:00:00Z"
+updated_at: "2024-06-10T00:00:00Z"
+hero_image: "/images/hero-analisi.svg"
+hero_alt: "Grafico tassi e spread"
+hero_caption: "La politica monetaria entra nelle scelte quotidiane."
+hero_source: "https://www.ecb.europa.eu/"
+takeaways:
+  - Il costo del denaro condiziona mutui e prestiti.
+  - I tassi reali cambiano il rendimento atteso.
+impact: "Mutui, Imprese, Investitori"
+do_now:
+  - Ricalibra il budget sui nuovi livelli di rata.
+  - Confronta tassi fissi e variabili.
+rookie_lens: "Se la rata pesa troppo, rivedi prima il budget e poi il tasso."
 sources:
   - title: "Fonte ufficiale"
     url: "https://example.com"
@@ -90,6 +107,20 @@ sources:
 
 Testo dell’articolo...
 ```
+
+### Struttura contenuto (nel body)
+Nel corpo dell’articolo puoi aggiungere:
+- **Heading** (H2/H3) per sezioni logiche.
+- **Paragrafi** sintetici e orientati all’azione.
+- **Keyword highlight** con `[[kw:parola chiave]]`.
+
+### Componenti editoriali (come usarli)
+- **Titolo**: deve comunicare il tema principale e il contesto.
+- **Sottotesto (excerpt)**: 1–2 frasi di posizionamento.
+- **Autore**: usa `author_id` presente in `site.config.ts`.
+- **Immagine**: usa `hero_image` se disponibile (consigliato).
+- **Rookie lens**: una frase che traduce l’impatto per un lettore non esperto.
+- **Takeaways + Do now**: liste brevi per valore immediato.
 
 ## Come aggiungere un articolo
 ### Opzione A — manuale (Markdown)
