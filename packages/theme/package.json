@@ -1,5 +1,8 @@
 {
   "name": "@financerookie/theme",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "unist-util-visit": "^5.1.0"
+  }
 }

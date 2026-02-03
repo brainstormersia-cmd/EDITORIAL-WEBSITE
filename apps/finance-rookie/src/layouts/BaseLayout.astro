@@ -6,6 +6,9 @@ import Header from "@theme/components/Header.astro";
 import Footer from "@theme/components/Footer.astro";
 
 const { title, description, image, canonical, type } = Astro.props;
+
+// Debug grid visibile SOLO se metti ?grid=1 in URL
+const showGrid = Astro.url.searchParams.get("grid") === "1";
 ---
 <!doctype html>
 <html lang={SITE_CONFIG.locale}>
@@ -19,7 +22,7 @@ const { title, description, image, canonical, type } = Astro.props;
       siteConfig={SITE_CONFIG}
     />
   </head>
-  <body class="bg-bg text-fg" data-debug-grid={import.meta.env.DEV ? "1" : undefined}>
+  <body class="bg-bg text-fg" data-debug-grid={showGrid ? "1" : undefined}>
     <Header siteConfig={SITE_CONFIG} />
     <main class="min-h-screen">
       <slot />

@@ -1,10 +1,14 @@
 ---
 const { siteConfig } = Astro.props;
+const alt = siteConfig?.name ?? "FinanceRookie";
 ---
-<a href="/" class="logo-lockup flex flex-col leading-none text-left">
-  <span class="brand text-4xl md:text-5xl font-black tracking-tight font-heading">
-    <span>{siteConfig.logoParts?.primary ?? siteConfig.logoText}</span>
-    {siteConfig.logoParts?.accent && <span class="rookie">{siteConfig.logoParts.accent}</span>}
-  </span>
-  <span class="text-[0.65rem] uppercase tracking-[0.4em] text-muted">Magazine</span>
+
+<a href="/" class="logo-lockup" aria-label={alt}>
+  <img
+    src="/logo1.svg"
+    alt={alt}
+    class="logo-img"
+    loading="eager"
+    decoding="async"
+  />
 </a>

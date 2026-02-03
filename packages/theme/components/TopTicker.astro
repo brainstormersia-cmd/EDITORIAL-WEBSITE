@@ -7,20 +7,39 @@ const items = [
   { label: "BTP 10Y", value: "3.78%", change: "+0.02" },
   { label: "Brent", value: "82.15", change: "-0.4%" }
 ];
+
+const now = new Date();
+const prettyDate = new Intl.DateTimeFormat("it-IT", {
+  weekday: "long",
+  day: "2-digit",
+  month: "long",
+  year: "numeric"
+}).format(now);
 ---
-<div class="topline border-b border-border">
-  <div class="container flex items-center gap-4 overflow-x-auto py-1 text-[0.65rem] uppercase tracking-[0.25em]">
-    <span class="text-[0.65rem] font-semibold text-bg">Market snapshot</span>
-    <div class="flex items-center gap-6 whitespace-nowrap">
-      {items.map((item) => (
-        <div class="flex items-center gap-2" key={item.label}>
-          <span class="text-bg">{item.label}</span>
-          <span class="font-semibold text-bg">{item.value}</span>
-          <span class={item.change.startsWith("-") ? "text-red-400" : "text-green-400"}>
-            {item.change}
-          </span>
-        </div>
-      ))}
+
+<div class="topline">
+  <div class="container topline-inner">
+    <div class="topline-left">
+      <span class="topline-label">Market snapshot</span>
+
+      <div class="topline-items" aria-label="Market snapshot">
+        {items.map((item) => {
+          const isNeg = item.change.trim().startsWith("-");
+          return (
+            <div class="ticker-item" key={item.label}>
+              <span class="ticker-label">{item.label}</span>
+              <span class="ticker-value">{item.value}</span>
+              <span class={`ticker-change ${isNeg ? "is-neg" : "is-pos"}`}>
+                {item.change}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
+
+    <time class="topline-date" datetime={now.toISOString()}>
+      {prettyDate}
+    </time>
   </div>
 </div>

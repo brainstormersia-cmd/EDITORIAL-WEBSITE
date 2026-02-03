@@ -1,40 +1,42 @@
 import { defineCollection, z } from "astro:content";
+import { SITE_CONFIG } from "../../apps/finance-rookie/src/site.config";
+
+
+const categorySlugs = (SITE_CONFIG.categories?.map((c) => c.slug).filter(Boolean) ?? []) as string[];
+
+// Se non hai categorie in config, non ti blocco la build:
+const categorySchema =
+  categorySlugs.length > 0
+    ? z.enum(categorySlugs as [string, ...string[]])
+    : z.string().min(1);
 
 const articles = defineCollection({
   type: "content",
   schema: z.object({
-    title: z.string(),
-    dek: z.string(),
-    date: z.date(),
-    category: z.object({
-      label: z.string(),
-      slug: z.string()
-    }),
-    author: z.object({
-      name: z.string(),
-      avatarUrl: z.string()
-    }),
-    readTime: z.number(),
-    heroImage: z.object({
-      src: z.string(),
-      alt: z.string(),
-      caption: z.string(),
-      sourceUrl: z.string().url().optional()
-    }),
-    whyItMatters: z.array(z.string()).max(3),
-    impact: z.string(),
-    doNow: z.array(z.string()).max(2),
-    rookieLens: z.string(),
-    keywords: z.array(z.string()),
-    sources: z.array(
-      z.object({
-        title: z.string(),
-        url: z.string().url(),
-        date: z.string()
-      })
-    ),
-    featured: z.boolean(),
-    draft: z.boolean()
+    title: z.string().min(1),
+    description: z.string().min(1),
+
+    // accetta "2024-10-02" e lo trasforma in Date
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+
+    status: z.enum(["draft", "published"]).default("published"),
+
+    // IMPORTANTE: qui voglio lo slug (es. "notizie"), non "Notizie"
+    category: categorySchema,
+
+    tags: z.array(z.string().min(1)).default([]),
+
+    // per ora stringa (poi la trasformiamo in reference authors)
+    author: z.string().min(1),
+
+    // path in /public (consigliato per static): "/images/posts/xxx.jpg" oppure "/hero-news.svg"
+    mainImage: z.string().optional(),
+
+    // extra (per homepage)
+    featured: z.boolean().default(false),
+    editorsPick: z.boolean().default(false),
+    trendingScore: z.number().optional()
   })
 });
 

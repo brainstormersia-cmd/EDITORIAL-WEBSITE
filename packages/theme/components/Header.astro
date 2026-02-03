@@ -6,19 +6,23 @@ import SearchModal from "./SearchModal.astro";
 const { siteConfig } = Astro.props;
 const navItems = siteConfig?.nav ?? [];
 ---
+
 <header class="site-header sticky top-0 z-50 border-b border-border bg-bg">
   <TopTicker />
-  <div class="header-inner container py-6">
+
+  <div class="header-inner container">
     <div class="header-main">
       <div class="header-brand">
         <LogoMark siteConfig={siteConfig} />
       </div>
+
       <div class="header-nav-wrap">
         <nav class="header-nav text-xs font-medium uppercase tracking-[0.35em]">
           {navItems.map((item) => (
             <a href={item.href} key={item.href}>{item.label}</a>
           ))}
         </nav>
+
         <button
           class="search-button"
           data-search-trigger
@@ -30,6 +34,7 @@ const navItems = siteConfig?.nav ?? [];
       </div>
     </div>
   </div>
+
   <SearchModal />
 </header>
 
