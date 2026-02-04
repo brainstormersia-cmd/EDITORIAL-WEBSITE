@@ -1,5 +1,5 @@
 ---
-const { class: className } = Astro.props;
+const { class: className, inputId = "newsletter-email" } = Astro.props;
 ---
 <div class:list={["newsletter-premium bg-fg text-bg p-8 border border-border", className]}>
   <h3 class="text-lg font-heading uppercase tracking-[0.35em]">Newsletter</h3>
@@ -7,9 +7,14 @@ const { class: className } = Astro.props;
     Il briefing settimanale per rookie ambiziosi. Solo insight, niente rumore.
   </p>
   <div class="mt-5 flex flex-col gap-3">
+    <label class="sr-only" for={inputId}>
+      Inserisci la tua email
+    </label>
     <input
+      id={inputId}
       type="email"
       placeholder="email@esempio.com"
+      autocomplete="email"
       class="w-full border border-border bg-white px-3 py-2 text-sm text-fg focus:border-accent focus:ring-2 focus:ring-accent"
     />
     <button class="bg-accent text-fg font-semibold uppercase tracking-[0.35em] py-2">

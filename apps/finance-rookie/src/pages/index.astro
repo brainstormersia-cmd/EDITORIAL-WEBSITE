@@ -29,12 +29,17 @@ const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
 <BaseLayout title={SITE_CONFIG.name} description={SITE_CONFIG.description}>
-  <section class={`breaking-banner ${breakingArticle ? "breaking-banner--active" : "breaking-banner--fallback"}`}>
+  <section
+    class={`breaking-banner ${breakingArticle ? "breaking-banner--active" : "breaking-banner--fallback"}`}
+    role="status"
+    aria-live="polite"
+  >
     <div class="container breaking-banner-inner">
       <BreakingBadge label="Breaking" variant="breaking" />
       <span>
         AGGIORNAMENTO:{" "}
         {breakingArticle ? breakingArticle.data.title : "Nessuna breaking news al momento"}
+        <span aria-hidden="true"> →</span>
       </span>
     </div>
   </section>
@@ -72,12 +77,12 @@ const getCategoryLabel = (slug) =>
             variant="featured"
             getCategoryLabel={getCategoryLabel}
           />
-          <NewsletterBox class="lg:hidden" />
+          <NewsletterBox class="lg:hidden" inputId="newsletter-email-inline" />
           <ArticleGrid articles={latestSecondary} getCategoryLabel={getCategoryLabel} />
         </div>
       </div>
       <aside class="hidden lg:block space-y-6 sticky top-28 self-start">
-        <NewsletterBox />
+        <NewsletterBox inputId="newsletter-email-sidebar" />
         <EditorsPicks items={editorsPicks} />
       </aside>
     </div>
