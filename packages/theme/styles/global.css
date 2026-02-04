@@ -656,48 +656,52 @@ h2 {
 /* Mobile: stacked */
 @media (max-width: 768px) {
   .header-main {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
+    justify-content: space-between;
+    gap: var(--space-2);
   }
 
   .header-inner {
-    padding: 0.7rem 0;
+    padding: 0.5rem 0;
   }
 
   .header-brand {
     display: flex;
-    justify-content: center;
-    width: 100%;
+    justify-content: flex-start;
+    width: auto;
   }
 
   .header-nav-wrap {
-    width: 100%;
-    flex-direction: column;
+    width: auto;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
+    justify-content: flex-end;
+    gap: var(--space-3);
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .logo-img {
-    height: 5.25rem;
+    height: 3.5rem;
   }
 
   .header-nav {
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1rem;
     row-gap: 0;
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
-    padding-bottom: 0.35rem;
+    width: auto;
+    margin: 0;
+    text-align: left;
+    padding-bottom: 0;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .header-nav a {
