@@ -29,14 +29,15 @@ const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
 <BaseLayout title={SITE_CONFIG.name} description={SITE_CONFIG.description}>
-  {breakingArticle && (
-    <section class="breaking-banner">
-      <div class="container breaking-banner-inner">
-        <BreakingBadge label="Breaking" variant="breaking" />
-        <span>AGGIORNAMENTO: {breakingArticle.data.title}</span>
-      </div>
-    </section>
-  )}
+  <section class={`breaking-banner ${breakingArticle ? "breaking-banner--active" : "breaking-banner--fallback"}`}>
+    <div class="container breaking-banner-inner">
+      <BreakingBadge label="Breaking" variant="breaking" />
+      <span>
+        AGGIORNAMENTO:{" "}
+        {breakingArticle ? breakingArticle.data.title : "Nessuna breaking news al momento"}
+      </span>
+    </div>
+  </section>
   <div class="container section-block section-block--tight space-y-10">
     {featured && (
       <HeroFeatured
