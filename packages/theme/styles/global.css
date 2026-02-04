@@ -37,19 +37,21 @@ a {
   text-decoration: none;
 }
 
+.container,
+.article-main,
+.hero {
+  padding-inline: var(--gutter);
+}
+
 .container {
   width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding-left: var(--container-pad);
-  padding-right: var(--container-pad);
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding-left: 28px;
-    padding-right: 28px;
-  }
+.container .article-main,
+.container .hero {
+  padding-inline: 0;
 }
 
 .grid-12 {

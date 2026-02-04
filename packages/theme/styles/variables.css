@@ -14,7 +14,8 @@
 
   --radius-none: 0px;
   --container-max: 1120px;
-  --container-pad: clamp(24px, 3vw, 36px);
+  --container-pad: clamp(28px, 4vw, 36px);
+  --gutter: var(--container-pad);
   --grid-gap: clamp(16px, 2.5vw, 28px);
 
   --space-1: 4px;
