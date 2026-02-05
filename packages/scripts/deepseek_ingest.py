@@ -500,7 +500,7 @@ def build_markdown(data: Dict[str, Any], published_iso: str) -> str:
         'author_id: "redazione"',
         'status: "published"',
         f'published_at: "{published_iso}"',
-        'hero_image: "/images/placeholder.jpg"',
+        'hero_image: "/images/hero-finanza.svg"',
         f'hero_alt: "Immagine {yaml_escape(data["category"])}"',
         f'rookie_lens: "{yaml_escape(data["rookie_lens"])}"',
         yaml_list("takeaways", takeaways),

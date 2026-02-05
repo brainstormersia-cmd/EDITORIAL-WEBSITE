@@ -1,7 +1,6 @@
 ---
-import KickerBar from "./KickerBar.astro";
-import BreakingBadge from "./BreakingBadge.astro";
-import { renderKw } from "../utils/renderKw";
+import { getArticleBadge } from "../../../apps/finance-rookie/src/lib/badges";
+import { renderKw } from "../../../apps/finance-rookie/src/lib/kw";
 
 const { article, variant = "default", categoryLabel, readTime } = Astro.props;
 const {
@@ -15,14 +14,12 @@ const {
   published_at,
   updated_at
 } = article.data;
-const heroImage = hero_image
-  ? {
-      src: hero_image,
-      alt: hero_alt ?? title,
-      caption: hero_caption ?? "",
-      sourceUrl: hero_source
-    }
-  : null;
+const heroImage = {
+  src: hero_image ?? "/images/hero-finanza.svg",
+  alt: hero_alt ?? title ?? `Immagine su ${category}`,
+  caption: hero_caption ?? "",
+  sourceUrl: hero_source
+};
 const label = categoryLabel ?? category;
 const displayDate = published_at ?? updated_at ?? new Date().toISOString();
 const formattedDate = new Intl.DateTimeFormat("it-IT", {
@@ -32,43 +29,36 @@ const formattedDate = new Intl.DateTimeFormat("it-IT", {
 }).format(new Date(displayDate));
 const displayReadTime =
   typeof readTime === "string" ? readTime : readTime ? `${readTime} min lettura` : "—";
-const isRecent = published_at
-  ? Date.now() - new Date(published_at).getTime() < 60 * 60 * 1000
-  : false;
-const showBreaking = Boolean(article.data.breaking);
-const showLive = Boolean(article.data.live);
+const badge = getArticleBadge(article);
 ---
 <article class="card-hover border border-border bg-white">
   <a href={`/article/${article.slug}`} class="block">
     <div class="relative">
-      {heroImage && (
-        <img
-          src={heroImage.src}
-          alt={heroImage.alt}
-          class="h-48 w-full object-cover"
-          width="800"
-          height="450"
-          loading="lazy"
-        />
-      )}
-      {(showBreaking || showLive || isRecent) && (
+      <img
+        src={heroImage.src}
+        alt={heroImage.alt}
+        class="h-48 w-full object-cover"
+        width="800"
+        height="450"
+        loading="lazy"
+      />
+      {badge && (
         <div class="absolute left-3 top-3 flex flex-wrap gap-2">
-          {showBreaking && <BreakingBadge label="Breaking" variant="breaking" />}
-          {showLive && <BreakingBadge label="Live" variant="live" />}
-          {!showBreaking && !showLive && isRecent && (
-            <BreakingBadge label="Appena pubblicato" variant="recent" />
-          )}
+          <span class={`badge badge--${badge.variant}`}>
+            {badge.variant === "breaking" || badge.variant === "live" ? <span class="badge-dot" /> : null}
+            {badge.label}
+          </span>
         </div>
       )}
     </div>
     <div class="p-5 space-y-3">
-      {variant === "featured" ? (
-        <KickerBar label={label} variant="compact" />
-      ) : (
-        <span class="text-xs uppercase tracking-[0.35em] text-muted">{label}</span>
-      )}
+      <span class="text-xs uppercase tracking-[0.35em] text-muted">{label}</span>
       <h3 class="font-heading text-2xl font-bold leading-tight">{title}</h3>
-      <p class="dek text-sm text-muted" set:html={renderKw(excerpt)} />
+      <p class="dek text-sm text-muted">
+        {renderKw(excerpt).map((node) =>
+          node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+        )}
+      </p>
       <div class="text-[0.7rem] uppercase tracking-[0.35em] text-muted">
         {formattedDate} · {displayReadTime}
       </div>

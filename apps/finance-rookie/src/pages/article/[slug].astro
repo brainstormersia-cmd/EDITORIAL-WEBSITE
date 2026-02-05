@@ -24,8 +24,13 @@ const index = sorted.findIndex((item) => item.slug === article.slug);
 const prev = sorted[index + 1];
 const next = sorted[index - 1];
 const related = sorted
-  .filter((item) => item.slug !== article.slug && item.data.category === article.data.category)
-  .slice(0, 3);
+  .filter((item) => item.slug !== article.slug)
+  .filter((item) => {
+    const sameCategory = item.data.category === article.data.category;
+    const tagOverlap = item.data.tags?.some((tag) => article.data.tags?.includes(tag));
+    return sameCategory || tagOverlap;
+  })
+  .slice(0, 4);
 ---
 <ArticleLayout article={article} headings={headings} related={related} prev={prev} next={next}>
   <Content />

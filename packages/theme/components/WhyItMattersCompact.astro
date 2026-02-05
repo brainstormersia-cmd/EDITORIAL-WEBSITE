@@ -1,6 +1,6 @@
 ---
 import CollapsibleSection from "./CollapsibleSection.astro";
-import { renderKw } from "../utils/renderKw";
+import { renderKw } from "../../../apps/finance-rookie/src/lib/kw";
 
 const { takeaways = [], impact, doNow = [], mode = "article" } = Astro.props;
 const maxPoints = 2;
@@ -15,14 +15,22 @@ const isOpen = mode === "home";
     {trimmedPoints.map((item, index) => (
         <li class="flex gap-3" key={item}>
           <span class="text-muted">{String(index + 1).padStart(2, "0")}</span>
-          <span set:html={renderKw(item)} />
+          <span>
+            {renderKw(item).map((node) =>
+              node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+            )}
+          </span>
         </li>
       ))}
     </ul>
     {impact && (
       <p class="mt-3 text-xs text-muted uppercase tracking-[0.2em]">
         <span class="font-semibold text-fg">Impatto:</span>
-        <span class="ml-2" set:html={renderKw(impact)} />
+        <span class="ml-2">
+          {renderKw(impact).map((node) =>
+            node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+          )}
+        </span>
       </p>
     )}
     {trimmedDoNow.length > 0 && (
@@ -32,7 +40,11 @@ const isOpen = mode === "home";
           {trimmedDoNow.map((item) => (
             <li class="flex gap-2" key={item}>
               <span aria-hidden="true">•</span>
-              <span set:html={renderKw(item)} />
+              <span>
+                {renderKw(item).map((node) =>
+                  node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+                )}
+              </span>
             </li>
           ))}
         </ul>

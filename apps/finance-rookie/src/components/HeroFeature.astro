@@ -1,0 +1,66 @@
+---
+import ArticleBadges from "./ArticleBadges.astro";
+import { renderKw } from "../lib/kw";
+
+const { article, author, readTime, categoryLabel } = Astro.props;
+const heroImage = article.data.hero_image ?? "/images/hero-finanza.svg";
+const heroAlt = article.data.hero_alt ?? article.data.title ?? `Immagine su ${categoryLabel}`;
+const takeaways = article.data.takeaways?.slice(0, 2) ?? [
+  "Contesto rapido per capire perché è rilevante.",
+  "Impatto diretto su mercati e decisioni."
+];
+const displayDate = article.data.published_at ?? article.data.updated_at ?? new Date().toISOString();
+---
+<section class="grid gap-10 lg:grid-cols-[1.2fr,0.8fr] lg:items-center">
+  <div class="relative aspect-[4/3] overflow-hidden border border-border bg-bg-alt">
+    <img
+      src={heroImage}
+      alt={heroAlt}
+      class="h-full w-full object-cover"
+      width="1400"
+      height="900"
+      loading="eager"
+    />
+  </div>
+  <div class="space-y-6">
+    <div class="flex flex-wrap items-center gap-3">
+      <span class="inline-flex items-center rounded-full border border-border px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.3em]">
+        {categoryLabel}
+      </span>
+      <ArticleBadges article={article} />
+    </div>
+    <h1 class="font-heading text-5xl leading-[0.95] md:text-6xl">{article.data.title}</h1>
+    <p class="text-lg text-muted">
+      {renderKw(article.data.excerpt).map((node) =>
+        node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+      )}
+    </p>
+    <div class="rounded-none border border-border bg-white p-5">
+      <p class="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted">Perché conta</p>
+      <ul class="mt-3 list-disc space-y-2 pl-4 text-sm text-fg/80">
+        {takeaways.map((item) => (
+          <li>
+            {renderKw(item).map((node) =>
+              node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="flex flex-col gap-3 text-sm text-muted md:flex-row md:items-center md:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="font-semibold text-fg">{author?.name ?? "Redazione · FinanceRookie"}</span>
+        <span>· {new Date(displayDate).toLocaleDateString("it-IT", { day: "2-digit", month: "long" })}</span>
+        <span>· {readTime} min</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs uppercase tracking-[0.35em]">
+        <a href={`/article/${article.slug}`} class="font-semibold text-fg hover:text-accent">
+          Leggi ora
+        </a>
+        <a href="/category/analisi" class="text-muted hover:text-accent">
+          Vai alle analisi
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,16 +1,15 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import BylineRow from "@theme/components/BylineRow.astro";
-import ArticleCard from "@theme/components/ArticleCard.astro";
-import CollapsibleSection from "@theme/components/CollapsibleSection.astro";
 import WhyItMattersCompact from "@theme/components/WhyItMattersCompact.astro";
 import RookieLens from "@theme/components/RookieLens.astro";
-import KickerBar from "@theme/components/KickerBar.astro";
-import HeroMedia from "@theme/components/HeroMedia.astro";
-import TOCBox from "@theme/components/TOCBox.astro";
-import { renderKw } from "@theme/utils/renderKw";
 import { readingTime } from "@theme/utils/readingTime";
 import { SITE_CONFIG } from "../site.config";
+import ArticleBadges from "../components/ArticleBadges.astro";
+import ArticleTOC from "../components/ArticleTOC.astro";
+import RelatedArticles from "../components/RelatedArticles.astro";
+import SupersededNotice from "../components/SupersededNotice.astro";
+import { renderKw } from "../lib/kw";
 
 const { article, headings = [], related = [], prev, next } = Astro.props;
 const {
@@ -31,34 +30,24 @@ const {
   sources,
   methodology_note,
   superseded_by,
+  superseded_by_url,
   updates
 } = article.data;
 
 const author = SITE_CONFIG.authors[author_id];
 const categoryLabel = SITE_CONFIG.categories.find((item) => item.slug === category)?.label ?? category;
-const heroImage = hero_image
-  ? {
-      src: hero_image,
-      alt: hero_alt ?? title,
-      caption: hero_caption ?? "",
-      sourceUrl: hero_source
-    }
-  : null;
+const getCategoryLabel = (slug) =>
+  SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
+const heroImage = {
+  src: hero_image ?? "/images/hero-finanza.svg",
+  alt: hero_alt ?? title ?? `Immagine su ${categoryLabel}`,
+  caption: hero_caption ?? "",
+  sourceUrl: hero_source
+};
 const readTime = readingTime(article.body ?? "");
 const displayDate = published_at ?? updated_at ?? new Date().toISOString();
 const canonicalUrl = `${SITE_CONFIG.siteUrl}/article/${article.slug}`;
 const articleVariant = category === "notizie" ? "news" : category === "analisi" ? "analysis" : "longform";
-const relatedWithType = related.map((item, index) => {
-  const sameCategory = item.data.category === category;
-  const tagOverlap = item.data.tags?.some((tag) => article.data.tags?.includes(tag));
-  const isNewer = new Date(item.data.published_at ?? 0).valueOf() > new Date(displayDate).valueOf();
-  let type = "correlato";
-  if (tagOverlap) type = "stesso-tema";
-  if (isNewer) type = "evoluzione";
-  if (!sameCategory) type = "impatto";
-  if (index === 0) type = "correlato";
-  return { item, type };
-});
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
@@ -69,7 +58,7 @@ const jsonLd = {
   author: [
     {
       "@type": "Person",
-      name: author?.name ?? "Redazione FinanceRookie",
+      name: author?.name ?? "Redazione · FinanceRookie",
       url: SITE_CONFIG.siteUrl
     }
   ],
@@ -93,38 +82,51 @@ const jsonLd = {
   <article class={`container section-block article article--${articleVariant}`}>
     <div class="grid gap-12 lg:grid-cols-[2.2fr,1fr] lg:items-start">
       <div class="article-main">
-        {superseded_by && (
-          <div class="superseded-banner">
-            <p class="text-sm font-semibold">Questo articolo è stato superato.</p>
-            <p class="text-sm text-muted mt-1">
-              Versione aggiornata:{" "}
-              <a class="underline" href={`/article/${superseded_by}`}>Leggi qui</a>
-            </p>
-            {updates?.length ? (
-              <ol class="mt-3 space-y-2 text-xs text-muted">
-                {updates.map((update) => (
-                  <li>
-                    <span class="font-semibold text-fg">{update.date ?? "Aggiornamento"}</span>
-                    {" · "}
-                    {update.slug ? <a class="underline" href={`/article/${update.slug}`}>{update.title}</a> : update.title}
-                  </li>
-                ))}
-              </ol>
-            ) : null}
-          </div>
-        )}
+        <SupersededNotice
+          supersededBy={superseded_by}
+          supersededByUrl={superseded_by_url}
+          updates={updates}
+        />
         <header class="article-header">
-          <KickerBar label={categoryLabel} />
-          <h1 class="article-title font-heading text-4xl md:text-5xl font-black leading-[1.1] tracking-[-0.02em]">
-            {title}
-          </h1>
-          <p class="dek text-lg text-muted" set:html={renderKw(excerpt)} />
+          <div class="flex flex-wrap items-center gap-3 text-sm">
+            <span class="inline-flex items-center rounded-full border border-border px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.3em]">
+              {categoryLabel}
+            </span>
+            <ArticleBadges article={article} />
+          </div>
+          <h1 class="font-heading text-5xl leading-[1.05] md:text-6xl">{title}</h1>
+          <p class="text-lg text-muted">
+            {renderKw(excerpt).map((node) =>
+              node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+            )}
+          </p>
           <BylineRow author={author} date={displayDate} readTime={readTime} />
         </header>
 
         <div class="article-hero">
-          <HeroMedia heroImage={heroImage} title={title} dek={excerpt} />
+          <figure class="border border-border bg-white">
+            <img
+              src={heroImage.src}
+              alt={heroImage.alt}
+              class="aspect-video h-full w-full object-cover"
+              width="1600"
+              height="900"
+              loading="lazy"
+            />
+            {(heroImage.caption || heroImage.sourceUrl) && (
+              <figcaption class="px-4 py-3 text-xs text-muted">
+                {heroImage.caption}
+                {heroImage.sourceUrl && (
+                  <a href={heroImage.sourceUrl} class="text-fg underline ml-1">
+                    Fonte: {new URL(heroImage.sourceUrl).hostname}
+                  </a>
+                )}
+              </figcaption>
+            )}
+          </figure>
         </div>
+
+        <ArticleTOC headings={headings} />
 
         <div class="prose article-prose">
           <slot />
@@ -133,25 +135,29 @@ const jsonLd = {
         <WhyItMattersCompact takeaways={takeaways} impact={impact} doNow={do_now} mode="article" />
         <RookieLens text={rookie_lens} />
 
-        <CollapsibleSection title="In questo articolo" variant="subtle">
-          <TOCBox headings={headings} mode="mobile" />
-        </CollapsibleSection>
-
-        <CollapsibleSection title="Fonti & Metodologia" variant="subtle">
-          <ul class="space-y-3 text-sm">
-            {sources?.map((source) => (
-              <li key={source.url}>
-                <a href={source.url} class="underline" target="_blank" rel="noopener noreferrer">
-                  {source.title}
-                </a>
-                <span class="text-muted">
-                  · {source.publisher ?? new URL(source.url).hostname}{source.date ? ` · ${source.date}` : ""}
-                </span>
-              </li>
-            ))}
-          </ul>
-          {methodology_note && <p class="mt-3 text-xs text-muted">{methodology_note}</p>}
-        </CollapsibleSection>
+        {(sources?.length || methodology_note) && (
+          <details class="border border-border bg-white p-5">
+            <summary class="flex cursor-pointer items-center justify-between text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-muted">
+              Fonti & Metodologia
+              <span aria-hidden="true">+</span>
+            </summary>
+            <div class="mt-4 space-y-3 text-sm text-muted">
+              <ul class="space-y-3 text-sm">
+                {sources?.map((source) => (
+                  <li key={source.url}>
+                    <a href={source.url} class="underline" target="_blank" rel="noopener noreferrer">
+                      {source.title}
+                    </a>
+                    <span class="text-muted">
+                      · {source.publisher ?? new URL(source.url).hostname}{source.date ? ` · ${source.date}` : ""}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              {methodology_note && <p class="text-xs text-muted">{methodology_note}</p>}
+            </div>
+          </details>
+        )}
 
         <div class="flex flex-col gap-4 text-xs uppercase tracking-[0.35em] text-muted md:flex-row md:items-center md:justify-between">
           {prev ? (
@@ -166,23 +172,12 @@ const jsonLd = {
           )}
         </div>
       </div>
-      <aside class="hidden lg:flex flex-col gap-6 sticky top-28">
-        <div class="related-panel">
-          <h2 class="font-heading text-xl">Articoli correlati</h2>
-          <ul class="mt-4 space-y-4">
-            {relatedWithType.map(({ item, type }) => (
-              <li>
-                <p class="text-xs uppercase tracking-[0.35em] text-muted">{type}</p>
-                <a href={`/article/${item.slug}`} class="block font-semibold hover:underline">
-                  {item.data.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <aside class="hidden lg:flex flex-col gap-6">
+        <ArticleTOC headings={headings} />
       </aside>
     </div>
   </article>
+  <RelatedArticles articles={related} getCategoryLabel={getCategoryLabel} />
   <script>
     const progressBar = document.getElementById("reading-progress");
     const updateProgress = () => {

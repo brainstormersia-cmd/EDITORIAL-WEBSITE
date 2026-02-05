@@ -143,6 +143,14 @@ h2 {
   font-weight: 600;
 }
 
+.kw-mark {
+  background: rgba(190, 242, 100, 0.35);
+  color: var(--color-fg);
+  padding: 0.05rem 0.2rem;
+  border-radius: var(--radius-none);
+  font-weight: 600;
+}
+
 .dek {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -168,7 +176,7 @@ h2 {
   left: 0;
   bottom: -0.35rem;
   width: 32%;
-  height: 4px;
+  height: 3px;
   background: var(--color-accent);
 }
 
@@ -402,6 +410,11 @@ h2 {
 .badge--recent {
   background: #111827;
   color: #d1fae5;
+}
+
+.badge--updated {
+  background: #0f172a;
+  color: #fef9c3;
 }
 
 @keyframes badge-pulse {

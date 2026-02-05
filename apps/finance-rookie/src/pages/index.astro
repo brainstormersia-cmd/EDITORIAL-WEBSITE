@@ -1,11 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroFeatured from "@theme/components/HeroFeatured.astro";
-import TrendingRail from "@theme/components/TrendingRail.astro";
-import ArticleGrid from "@theme/components/ArticleGrid.astro";
-import NewsletterBox from "@theme/components/NewsletterBox.astro";
-import EditorsPicks from "@theme/components/EditorsPicks.astro";
-import BreakingBadge from "@theme/components/BreakingBadge.astro";
+import HeroFeature from "../components/HeroFeature.astro";
+import TrendingNow from "../components/TrendingNow.astro";
 import { getCollection } from "astro:content";
 import { SITE_CONFIG } from "../site.config";
 import { readingTime } from "@theme/utils/readingTime";
@@ -16,119 +12,35 @@ const articles = (await getCollection("articles"))
   .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
 const featuredItems = articles.filter((article) => article.data.featured);
 const featured = featuredItems[0] ?? articles[0];
-const breakingArticle = articles.find((article) => article.data.breaking);
-const trending = articles.slice(1, 4);
-const latest = articles.slice(0, 6);
-const latestPrimary = latest.slice(0, 2);
-const latestSecondary = latest.slice(2);
-const editorsPicks = articles.slice(2, 5);
-const finanza = articles.filter((article) => article.data.category === "finanza").slice(0, 3);
-const economia = articles.filter((article) => article.data.category === "economia").slice(0, 3);
-const notizie = articles.filter((article) => article.data.category === "notizie").slice(0, 3);
+const breakingArticle = articles.find((article) => {
+  if (article.data.breaking_until && article.data.breaking_until > new Date()) {
+    return true;
+  }
+  return Boolean(article.data.breaking);
+});
+const trending = articles.slice(0, 3);
 const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
-<BaseLayout title={SITE_CONFIG.name} description={SITE_CONFIG.description}>
-  <section
-    class={`breaking-banner ${breakingArticle ? "breaking-banner--active" : "breaking-banner--fallback"}`}
-    role="status"
-    aria-live="polite"
-  >
-    <div class="container breaking-banner-inner">
-      <BreakingBadge label="Breaking" variant="breaking" />
-      <span>
-        AGGIORNAMENTO:{" "}
-        {breakingArticle ? breakingArticle.data.title : "Nessuna breaking news al momento"}
-        <span aria-hidden="true"> →</span>
-      </span>
-    </div>
-  </section>
-  <div class="container section-block section-block--tight space-y-10">
-    {featured && (
-      <HeroFeatured
-        article={featured}
-        author={SITE_CONFIG.authors[featured.data.author_id]}
-        readTime={readingTime(featured.body ?? "")}
-        categoryLabel={getCategoryLabel(featured.data.category)}
-      />
-    )}
-  </div>
-
-  <section class="trending-rail section-block section-block--tight">
-    <div class="container space-y-6">
-      <div class="flex items-end justify-between">
-        <h2 class="font-heading text-3xl signature-underline font-bold">Trending ora</h2>
-        <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">Archivio</a>
-      </div>
-      <TrendingRail items={trending} getCategoryLabel={getCategoryLabel} />
+<BaseLayout
+  title={SITE_CONFIG.name}
+  description={SITE_CONFIG.description}
+  breakingText={breakingArticle ? breakingArticle.data.title : "Nessuna breaking news al momento"}
+  breakingHref={breakingArticle ? `/article/${breakingArticle.slug}` : undefined}
+>
+  <section class="section-block">
+    <div class="container space-y-10">
+      {featured && (
+        <HeroFeature
+          article={featured}
+          author={SITE_CONFIG.authors[featured.data.author_id]}
+          readTime={readingTime(featured.body ?? "")}
+          categoryLabel={getCategoryLabel(featured.data.category)}
+        />
+      )}
     </div>
   </section>
 
-  <section class="section-block section-block--tight">
-    <div class="container grid gap-12 lg:grid-cols-[2fr,1fr]">
-      <div class="space-y-8">
-        <div class="flex items-end justify-between">
-          <h2 class="font-heading text-3xl signature-underline font-bold">Ultimi articoli</h2>
-          <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">Vedi tutti</a>
-        </div>
-        <div class="space-y-6">
-          <ArticleGrid
-            articles={latestPrimary}
-            variant="featured"
-            getCategoryLabel={getCategoryLabel}
-          />
-          <NewsletterBox class="lg:hidden" inputId="newsletter-email-inline" />
-          <ArticleGrid articles={latestSecondary} getCategoryLabel={getCategoryLabel} />
-        </div>
-      </div>
-      <aside class="hidden lg:block space-y-6 sticky top-28 self-start">
-        <NewsletterBox inputId="newsletter-email-sidebar" />
-        <EditorsPicks items={editorsPicks} />
-      </aside>
-    </div>
-  </section>
+  <TrendingNow items={trending} getCategoryLabel={getCategoryLabel} />
 
-  <section class="section-block section-block--tight">
-    <div class="container grid gap-6 lg:grid-cols-3">
-      <div class="home-category-card space-y-4">
-        <h3 class="font-heading text-2xl signature-underline">Finanza</h3>
-        <ul class="space-y-3 text-sm">
-          {finanza.map((article) => (
-            <li key={article.slug}>
-              <a href={`/article/${article.slug}`} class="hover:underline">{article.data.title}</a>
-            </li>
-          ))}
-        </ul>
-        <a href="/category/finanza" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">
-          Vedi tutti
-        </a>
-      </div>
-      <div class="home-category-card space-y-4">
-        <h3 class="font-heading text-2xl signature-underline">Economia</h3>
-        <ul class="space-y-3 text-sm">
-          {economia.map((article) => (
-            <li key={article.slug}>
-              <a href={`/article/${article.slug}`} class="hover:underline">{article.data.title}</a>
-            </li>
-          ))}
-        </ul>
-        <a href="/category/economia" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">
-          Vedi tutti
-        </a>
-      </div>
-      <div class="home-category-card space-y-4">
-        <h3 class="font-heading text-2xl signature-underline">Notizie</h3>
-        <ul class="space-y-3 text-sm">
-          {notizie.map((article) => (
-            <li key={article.slug}>
-              <a href={`/article/${article.slug}`} class="hover:underline">{article.data.title}</a>
-            </li>
-          ))}
-        </ul>
-        <a href="/category/notizie" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">
-          Vedi tutti
-        </a>
-      </div>
-    </div>
-  </section>
 </BaseLayout>
