@@ -2,76 +2,32 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroFeature from "../components/HeroFeature.astro";
 import TrendingNow from "../components/TrendingNow.astro";
+import ArticleGrid from "@theme/components/ArticleGrid.astro";
 import { getCollection } from "astro:content";
 import { SITE_CONFIG } from "../site.config";
 import { readingTime } from "@theme/utils/readingTime";
+import { getArticleDate, selectHeroArticles } from "../lib/ranking";
 
 const now = new Date();
-const scoreArticle = (article) => {
-  let score = 0;
-
-  if (article?.data?.featured) {
-    score += 50;
-  }
-
-  const breakingUntil = article?.data?.breaking_until
-    ? new Date(article.data.breaking_until)
-    : null;
-  if (breakingUntil && !Number.isNaN(breakingUntil.valueOf()) && breakingUntil > now) {
-    score += 40;
-  }
-
-  if (article?.data?.is_live || article?.data?.live) {
-    score += 30;
-  }
-
-  const publishedAt = article?.data?.published_at
-    ? new Date(article.data.published_at)
-    : null;
-  if (publishedAt && !Number.isNaN(publishedAt.valueOf())) {
-    const hoursSincePublished = (now.valueOf() - publishedAt.valueOf()) / 36e5;
-    score += Math.max(0, 48 - hoursSincePublished);
-  }
-
-  return score;
-};
-
 const articles = (await getCollection("articles"))
   .filter((article) => article.data.status === "published")
   .filter((article) => !article.data.published_at || new Date(article.data.published_at) <= new Date())
-  .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
-const sortedArticles = [...articles].sort((a, b) => {
-  const scoreDiff = scoreArticle(b) - scoreArticle(a);
-  if (scoreDiff !== 0) {
-    return scoreDiff;
-  }
-  return new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf();
-});
-const featuredItems = sortedArticles.filter((article) => article.data.featured);
-const featured = featuredItems[0] ?? sortedArticles[0];
+  .sort((a, b) => getArticleDate(b).valueOf() - getArticleDate(a).valueOf());
+
+const { ranked: rankedArticles, primary: featured, secondary } = selectHeroArticles(articles, now, 3);
+const heroSlugs = new Set([featured?.slug, ...secondary.map((item) => item.slug)].filter(Boolean));
+const trending = rankedArticles.filter((article) => !heroSlugs.has(article.slug)).slice(0, 3);
+const latest = [...articles].sort(
+  (a, b) =>
+    new Date(b.data.published_at ?? b.data.updatedAt ?? b.data.updated_at ?? 0).valueOf() -
+    new Date(a.data.published_at ?? a.data.updatedAt ?? a.data.updated_at ?? 0).valueOf()
+);
 const breakingArticle =
   articles.find(
     (article) => article.data.breaking_until && new Date(article.data.breaking_until) > now
   ) ??
   articles.find((article) => Boolean(article.data.breaking)) ??
   articles[0];
-// Priorità trending: 1) breakingArticle, 2) tag "trending" o categoria "notizie", 3) resto per score.
-const trendingCandidates = [];
-const addUniqueTrending = (article) => {
-  if (!article || trendingCandidates.some((item) => item.slug === article.slug)) {
-    return;
-  }
-  trendingCandidates.push(article);
-};
-addUniqueTrending(breakingArticle);
-articles
-  .filter(
-    (article) =>
-      article.data.tags?.includes("trending") || article.data.category === "notizie"
-  )
-  .forEach(addUniqueTrending);
-sortedArticles.forEach(addUniqueTrending);
-const trending = trendingCandidates.slice(0, 3);
 const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
@@ -86,14 +42,40 @@ const getCategoryLabel = (slug) =>
       {featured && (
         <HeroFeature
           article={featured}
+          secondary={secondary}
           author={SITE_CONFIG.authors[featured.data.author_id]}
-          readTime={readingTime(featured.body ?? "")}
+          readTime={featured.data.readingTime ?? readingTime(featured.body ?? "")}
           categoryLabel={getCategoryLabel(featured.data.category)}
+          getCategoryLabel={getCategoryLabel}
         />
       )}
     </div>
   </section>
 
-  <TrendingNow items={trending} getCategoryLabel={getCategoryLabel} />
+  <TrendingNow items={trending} getCategoryLabel={getCategoryLabel} authors={SITE_CONFIG.authors} />
+
+  <section class="section-block">
+    <div class="container space-y-8">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div class="flex items-start gap-4">
+          <span class="mt-2 h-10 w-[2px] bg-accent" aria-hidden="true"></span>
+          <div>
+            <p class="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-muted">
+              Ultimi articoli
+            </p>
+            <h2 class="font-heading text-2xl md:text-3xl">Tutte le novità editoriali</h2>
+          </div>
+        </div>
+        <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">
+          Archivio completo
+        </a>
+      </div>
+      <ArticleGrid
+        articles={latest}
+        getCategoryLabel={getCategoryLabel}
+        getReadTime={(article) => article.data.readingTime ?? readingTime(article.body ?? "")}
+      />
+    </div>
+  </section>
 
 </BaseLayout>
