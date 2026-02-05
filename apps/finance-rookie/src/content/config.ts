@@ -20,8 +20,13 @@ const articles = defineCollection({
     updated_at: z.coerce.date().optional(),
     featured: z.boolean().optional(),
     breaking: z.boolean().optional(),
+    breaking_until: z.coerce.date().optional(),
+    is_live: z.boolean().optional(),
     live: z.boolean().optional(),
+    live_started_at: z.coerce.date().optional(),
+    live_ended_at: z.coerce.date().optional(),
     superseded_by: z.string().optional(),
+    superseded_by_url: z.string().url().optional(),
     updates: z
       .array(
         z.object({

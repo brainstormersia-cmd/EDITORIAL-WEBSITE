@@ -1,0 +1,33 @@
+---
+const items = [
+  { label: "FTSE MIB", value: "34.220", change: "+0.8%" },
+  { label: "DAX", value: "18.510", change: "-0.3%" },
+  { label: "EUR/USD", value: "1.087", change: "+0.1%" },
+  { label: "BTC", value: "67.420", change: "+2.4%" },
+  { label: "BTP 10Y", value: "3.64%", change: "-0.02%" }
+];
+const today = new Date().toLocaleDateString("it-IT", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric"
+});
+---
+<div class="w-full bg-black text-white text-[0.62rem] uppercase tracking-[0.32em]">
+  <div class="container flex h-8 items-center justify-between gap-6">
+    <div class="flex min-w-0 items-center gap-4">
+      <span class="hidden font-semibold md:inline">Markets</span>
+      <div class="flex min-w-0 items-center gap-5 overflow-hidden whitespace-nowrap">
+        {items.map((item) => (
+          <div class="flex items-center gap-2">
+            <span class="opacity-70">{item.label}</span>
+            <span class="font-semibold">{item.value}</span>
+            <span class={`font-semibold ${item.change.startsWith("+") ? "text-lime-300" : "text-rose-300"}`}>
+              {item.change}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+    <span class="hidden md:inline tracking-[0.2em] opacity-80">{today}</span>
+  </div>
+</div>

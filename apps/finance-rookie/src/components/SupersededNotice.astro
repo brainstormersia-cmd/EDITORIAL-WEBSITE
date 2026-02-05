@@ -1,0 +1,26 @@
+---
+const { supersededBy, supersededByUrl, updates = [] } = Astro.props;
+const link = supersededByUrl ?? (supersededBy ? `/article/${supersededBy}` : null);
+---
+{link ? (
+  <div class="border border-rose-300 bg-rose-50 p-5">
+    <p class="text-sm font-semibold text-rose-700">Articolo superato o aggiornato.</p>
+    <p class="mt-2 text-sm text-rose-700/80">
+      Versione nuova:{" "}
+      <a href={link} class="font-semibold underline">
+        Leggi qui
+      </a>
+    </p>
+    {updates.length ? (
+      <ol class="mt-4 space-y-2 text-xs text-rose-700/80">
+        {updates.map((update) => (
+          <li>
+            <span class="font-semibold text-rose-700">{update.date ?? "Aggiornamento"}</span>
+            {" · "}
+            {update.slug ? <a href={`/article/${update.slug}`} class="underline">{update.title}</a> : update.title}
+          </li>
+        ))}
+      </ol>
+    ) : null}
+  </div>
+) : null}

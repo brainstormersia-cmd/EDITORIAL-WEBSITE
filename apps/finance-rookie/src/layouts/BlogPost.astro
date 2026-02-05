@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
 import AuthorByline from "@theme/components/AuthorByline.astro";
 import AssistantSummary from "@theme/components/AssistantSummary.astro";
@@ -7,7 +6,8 @@ import { SITE_CONFIG } from "../site.config";
 
 const { frontmatter, image, content, url } = Astro.props;
 const canonical = `${SITE_CONFIG.siteUrl}${url}`;
-const imageUrl = image?.src ? `${SITE_CONFIG.siteUrl}${image.src}` : `${SITE_CONFIG.siteUrl}${frontmatter.mainImage}`;
+const imageSrc = image?.src ?? frontmatter.mainImage ?? "/images/hero-finanza.svg";
+const imageUrl = imageSrc ? `${SITE_CONFIG.siteUrl}${imageSrc}` : `${SITE_CONFIG.siteUrl}/images/hero-finanza.svg`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
@@ -21,7 +21,7 @@ const jsonLd = {
   description: frontmatter.description
 };
 ---
-<BaseLayout title={frontmatter.title} description={frontmatter.description} image={image?.src ?? frontmatter.mainImage} canonical={canonical}>
+<BaseLayout title={frontmatter.title} description={frontmatter.description} image={imageSrc} canonical={canonical}>
   <article class="container py-12">
     <span class="inline-flex bg-accent text-fg text-xs font-semibold uppercase tracking-[0.3em] px-3 py-1">
       {frontmatter.category}
@@ -37,9 +37,14 @@ const jsonLd = {
     </div>
     <div class="mt-8 mb-10 max-w-3xl mx-auto">
       <div class="aspect-video border border-border">
-        {image && (
-          <Image src={image} alt={frontmatter.title} width={1200} height={675} class="w-full h-full object-cover" />
-        )}
+        <img
+          src={imageSrc}
+          alt={frontmatter.title ?? "Cover articolo"}
+          width="1200"
+          height="675"
+          class="w-full h-full object-cover"
+          loading="lazy"
+        />
       </div>
     </div>
     <div class="article-content prose prose-lg mt-10 max-w-3xl">

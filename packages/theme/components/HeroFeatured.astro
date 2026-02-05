@@ -5,7 +5,7 @@ import BylineRow from "./BylineRow.astro";
 import WhyItMattersCompact from "./WhyItMattersCompact.astro";
 import RookieLens from "./RookieLens.astro";
 import BreakingBadge from "./BreakingBadge.astro";
-import { renderKw } from "../utils/renderKw";
+import { renderKw } from "../../../apps/finance-rookie/src/lib/kw";
 
 const { article, author, readTime, categoryLabel } = Astro.props;
 const {
@@ -59,7 +59,11 @@ const showLive = Boolean(article.data.live);
     <h1 class="font-heading text-4xl md:text-5xl font-black leading-[1.08] tracking-[-0.02em] max-w-[19ch]">
       {title}
     </h1>
-    <p class="dek text-lg text-muted max-w-[52ch]" set:html={renderKw(excerpt)} />
+    <p class="dek text-lg text-muted max-w-[52ch]">
+      {renderKw(excerpt).map((node) =>
+        node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+      )}
+    </p>
     <BylineRow author={author} date={displayDate} readTime={readTime} />
     <WhyItMattersCompact takeaways={takeaways} impact={impact} doNow={do_now} mode="home" />
     <RookieLens text={rookie_lens} />

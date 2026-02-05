@@ -2,7 +2,7 @@
 import { readingTime } from "../utils/readingTime";
 
 const { author, date, readTime, content } = Astro.props;
-const safeAuthor = author?.name?.trim() ? author.name : "Redazione FinanceRookie";
+const safeAuthor = author?.name?.trim() ? author.name : "Redazione · FinanceRookie";
 const avatar = author?.avatarUrl ?? "/images/avatar-redazione.svg";
 const time = typeof readTime === "number" ? `${readTime} min lettura` : readTime ?? readingTime(content ?? "");
 const formattedDate = new Date(date).toLocaleDateString("it-IT", {

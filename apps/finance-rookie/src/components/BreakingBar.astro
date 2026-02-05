@@ -1,0 +1,21 @@
+---
+const { label = "BREAKING", text = "Nessuna breaking news al momento", href } = Astro.props;
+---
+<div class="w-full bg-red-600 text-white">
+  <div class="container flex h-8 items-center justify-between text-[0.6rem] uppercase tracking-[0.3em]">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-2 font-semibold">
+        ⚡ {label}
+      </span>
+      <span class="font-medium normal-case tracking-normal">
+        {text}
+        <span aria-hidden="true"> →</span>
+      </span>
+    </div>
+    {href && (
+      <a href={href} class="hidden font-semibold tracking-[0.28em] md:inline">
+        Vai
+      </a>
+    )}
+  </div>
+</div>

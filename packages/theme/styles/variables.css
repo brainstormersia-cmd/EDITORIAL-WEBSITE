@@ -13,10 +13,10 @@
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   --radius-none: 0px;
-  --container-max: 1120px;
-  --container-pad: clamp(28px, 4vw, 48px);
+  --container-max: 1200px;
+  --container-pad: clamp(16px, 4vw, 24px);
   --gutter: var(--container-pad);
-  --grid-gap: clamp(16px, 2.5vw, 28px);
+  --grid-gap: clamp(16px, 2.5vw, 32px);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -26,7 +26,7 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
-  --section-y: clamp(40px, 6vw, 84px);
+  --section-y: clamp(40px, 6vw, 96px);
 
   --prose-max: 68ch;
   --article-max: 45rem;

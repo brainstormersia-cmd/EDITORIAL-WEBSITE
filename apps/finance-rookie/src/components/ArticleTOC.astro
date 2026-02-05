@@ -1,0 +1,37 @@
+---
+const { headings = [] } = Astro.props;
+const tocItems = headings.filter((heading) => heading.depth === 2);
+---
+{tocItems.length ? (
+  <>
+    <div class="hidden lg:block">
+      <div class="sticky top-28 border border-border bg-white p-5">
+        <p class="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-muted">In questo articolo</p>
+        <ul class="mt-4 space-y-3 text-sm">
+          {tocItems.map((item) => (
+            <li>
+              <a href={`#${item.slug}`} class="hover:text-accent">
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <details class="block border border-border bg-white p-4 lg:hidden">
+      <summary class="flex cursor-pointer items-center justify-between text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-muted">
+        In questo articolo
+        <span aria-hidden="true">+</span>
+      </summary>
+      <ul class="mt-4 space-y-3 text-sm">
+        {tocItems.map((item) => (
+          <li>
+            <a href={`#${item.slug}`} class="hover:text-accent">
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  </>
+) : null}

@@ -1,0 +1,12 @@
+---
+import { getArticleBadge } from "../lib/badges";
+
+const { article } = Astro.props;
+const badge = getArticleBadge(article);
+---
+{badge ? (
+  <span class={`badge badge--${badge.variant}`}>
+    {badge.variant === "breaking" || badge.variant === "live" ? <span class="badge-dot" /> : null}
+    {badge.label}
+  </span>
+) : null}
