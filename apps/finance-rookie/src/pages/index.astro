@@ -6,19 +6,56 @@ import { getCollection } from "astro:content";
 import { SITE_CONFIG } from "../site.config";
 import { readingTime } from "@theme/utils/readingTime";
 
+const now = new Date();
+const scoreArticle = (article) => {
+  let score = 0;
+
+  if (article?.data?.featured) {
+    score += 50;
+  }
+
+  const breakingUntil = article?.data?.breaking_until
+    ? new Date(article.data.breaking_until)
+    : null;
+  if (breakingUntil && !Number.isNaN(breakingUntil.valueOf()) && breakingUntil > now) {
+    score += 40;
+  }
+
+  if (article?.data?.is_live || article?.data?.live) {
+    score += 30;
+  }
+
+  const publishedAt = article?.data?.published_at
+    ? new Date(article.data.published_at)
+    : null;
+  if (publishedAt && !Number.isNaN(publishedAt.valueOf())) {
+    const hoursSincePublished = (now.valueOf() - publishedAt.valueOf()) / 36e5;
+    score += Math.max(0, 48 - hoursSincePublished);
+  }
+
+  return score;
+};
+
 const articles = (await getCollection("articles"))
   .filter((article) => article.data.status === "published")
   .filter((article) => !article.data.published_at || new Date(article.data.published_at) <= new Date())
   .sort((a, b) => new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf());
-const featuredItems = articles.filter((article) => article.data.featured);
-const featured = featuredItems[0] ?? articles[0];
+const sortedArticles = [...articles].sort((a, b) => {
+  const scoreDiff = scoreArticle(b) - scoreArticle(a);
+  if (scoreDiff !== 0) {
+    return scoreDiff;
+  }
+  return new Date(b.data.published_at ?? 0).valueOf() - new Date(a.data.published_at ?? 0).valueOf();
+});
+const featuredItems = sortedArticles.filter((article) => article.data.featured);
+const featured = featuredItems[0] ?? sortedArticles[0];
 const breakingArticle = articles.find((article) => {
   if (article.data.breaking_until && article.data.breaking_until > new Date()) {
     return true;
   }
   return Boolean(article.data.breaking);
 });
-const trending = articles.slice(0, 3);
+const trending = sortedArticles.slice(0, 3);
 const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
