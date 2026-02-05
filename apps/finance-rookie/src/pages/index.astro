@@ -49,13 +49,29 @@ const sortedArticles = [...articles].sort((a, b) => {
 });
 const featuredItems = sortedArticles.filter((article) => article.data.featured);
 const featured = featuredItems[0] ?? sortedArticles[0];
-const breakingArticle = articles.find((article) => {
-  if (article.data.breaking_until && article.data.breaking_until > new Date()) {
-    return true;
+const breakingArticle =
+  articles.find(
+    (article) => article.data.breaking_until && new Date(article.data.breaking_until) > now
+  ) ??
+  articles.find((article) => Boolean(article.data.breaking)) ??
+  articles[0];
+// Priorità trending: 1) breakingArticle, 2) tag "trending" o categoria "notizie", 3) resto per score.
+const trendingCandidates = [];
+const addUniqueTrending = (article) => {
+  if (!article || trendingCandidates.some((item) => item.slug === article.slug)) {
+    return;
   }
-  return Boolean(article.data.breaking);
-});
-const trending = sortedArticles.slice(0, 3);
+  trendingCandidates.push(article);
+};
+addUniqueTrending(breakingArticle);
+articles
+  .filter(
+    (article) =>
+      article.data.tags?.includes("trending") || article.data.category === "notizie"
+  )
+  .forEach(addUniqueTrending);
+sortedArticles.forEach(addUniqueTrending);
+const trending = trendingCandidates.slice(0, 3);
 const getCategoryLabel = (slug) =>
   SITE_CONFIG.categories.find((item) => item.slug === slug)?.label ?? slug;
 ---
