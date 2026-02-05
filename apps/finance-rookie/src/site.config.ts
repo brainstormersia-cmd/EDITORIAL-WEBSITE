@@ -9,19 +9,34 @@ export const SITE_CONFIG = {
     accent: "Rookie"
   },
   locale: "it-IT",
-  siteUrl: "https://example.pages.dev",
+  siteUrl: "https://example.pages.dev", // Ricordati di cambiarlo quando vai in produzione
+
+  // 1. NAVIGAZIONE (Cosa appare nel menu in alto)
+  // Ho selezionato le più importanti per non affollare il menu
   nav: [
-    { label: "Finanza", href: "/category/finanza" },
-    { label: "Economia", href: "/category/economia" },
-    { label: "Notizie", href: "/category/notizie" },
-    { label: "Analisi", href: "/category/analisi" },
-    { label: "Trending", href: "/category/trending" }
+    { label: "Mercati", href: "/category/mercati" },
+    { label: "Tech", href: "/category/tech" },
+    { label: "Crypto", href: "/category/crypto" },
+    { label: "Energia", href: "/category/energia" },
+    { label: "Risparmio", href: "/category/risparmio" },
+    { label: "Analisi", href: "/category/analisi" }
   ],
+
+  // 2. CATEGORIE (Tutte quelle ammesse dal sistema)
+  // Deve includere TUTTO ciò che esce dallo script Python per evitare errori "Invalid enum"
   categories: [
+    // --- Categorie generate da DeepSeek ---
+    { label: "Mercati", slug: "mercati" },
+    { label: "Tech", slug: "tech" },
+    { label: "Crypto", slug: "crypto" },
+    { label: "Energia", slug: "energia" },
+    { label: "Risparmio", slug: "risparmio" },
+    { label: "Analisi", slug: "analisi" },
+
+    // --- Categorie Legacy / Geniche (per sicurezza o uso manuale) ---
     { label: "Finanza", slug: "finanza" },
     { label: "Economia", slug: "economia" },
     { label: "Notizie", slug: "notizie" },
-    { label: "Analisi", slug: "analisi" },
     { label: "Trending", slug: "trending" }
   ],
   authors: {
@@ -29,12 +44,7 @@ export const SITE_CONFIG = {
       name: "Redazione FinanceRookie",
       avatarUrl: "/images/avatar-redazione.svg"
     }
-  },
-  socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com" },
-    { label: "X", href: "https://x.com" },
-    { label: "Instagram", href: "https://www.instagram.com" }
-  ]
+  }
 } as const;
 
 export type SiteConfig = typeof SITE_CONFIG;

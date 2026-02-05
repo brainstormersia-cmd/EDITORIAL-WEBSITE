@@ -4,12 +4,20 @@ import { renderKw } from "../../../apps/finance-rookie/src/lib/kw";
 const { text } = Astro.props;
 ---
 {text && (
-  <div class="rookie-lens">
-    <p class="text-xs uppercase tracking-[0.35em] text-muted">LENTE ROOKIE</p>
-    <p class="text-sm">
+  <div class="rookie-lens flex gap-3">
+    <span
+      class="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-[0.6rem] text-accent"
+      aria-hidden="true"
+    >
+      ✦
+    </span>
+    <div>
+      <p class="text-[0.65rem] uppercase tracking-[0.35em] text-muted">Lente Rookie</p>
+      <p class="text-sm">
       {renderKw(text).map((node) =>
         node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
       )}
-    </p>
+      </p>
+    </div>
   </div>
 )}

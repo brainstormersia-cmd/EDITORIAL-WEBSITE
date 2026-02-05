@@ -1,0 +1,75 @@
+---
+const {
+  author,
+  date,
+  readTime,
+  authorHref,
+  locale = "it-IT",
+  size = "default",
+  showAvatar = size === "default",
+  class: className
+} = Astro.props;
+
+const safeAuthor = author?.name?.trim() ? author.name : "Redazione FinanceRookie";
+const safeDate = date ? new Date(date) : null;
+const formattedDate = safeDate
+  ? new Intl.DateTimeFormat(locale, { day: "2-digit", month: "long", year: "numeric" }).format(safeDate)
+  : null;
+const formattedReadTime =
+  typeof readTime === "number" ? `${readTime} min lettura` : readTime ? `${readTime}` : null;
+const sizeClasses =
+  size === "compact" ? "text-[0.65rem] tracking-[0.25em]" : "text-[0.7rem] tracking-[0.3em]";
+const avatarUrl = author?.avatarUrl;
+---
+<div class:list={["article-meta flex flex-wrap items-center gap-2 text-muted uppercase", sizeClasses, className]}>
+  {authorHref ? (
+    <a
+      href={authorHref}
+      class="inline-flex items-center gap-2 rounded-full px-2 py-1 font-semibold text-fg transition-colors hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+    >
+      {showAvatar && (
+        avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt=""
+            class="h-6 w-6 rounded-full border border-border object-cover"
+            width="24"
+            height="24"
+            loading="lazy"
+          />
+        ) : (
+          <span
+            class="h-6 w-6 rounded-full border border-border bg-bg-alt"
+            aria-hidden="true"
+          />
+        )
+      )}
+      {safeAuthor}
+    </a>
+  ) : (
+    <span class="inline-flex items-center gap-2 rounded-full px-2 py-1 font-semibold text-fg">
+      {showAvatar && (
+        avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt=""
+            class="h-6 w-6 rounded-full border border-border object-cover"
+            width="24"
+            height="24"
+            loading="lazy"
+          />
+        ) : (
+          <span
+            class="h-6 w-6 rounded-full border border-border bg-bg-alt"
+            aria-hidden="true"
+          />
+        )
+      )}
+      {safeAuthor}
+    </span>
+  )}
+  {formattedDate && <span class="px-1">·</span>}
+  {formattedDate && <span class="px-2 py-1 leading-6">{formattedDate}</span>}
+  {formattedReadTime && <span class="px-1">·</span>}
+  {formattedReadTime && <span class="px-2 py-1 leading-6">{formattedReadTime}</span>}
+</div>

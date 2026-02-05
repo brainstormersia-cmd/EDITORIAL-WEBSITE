@@ -1,4 +1,4 @@
-type BadgeVariant = "breaking" | "live" | "recent" | "updated";
+type BadgeVariant = "breaking" | "live" | "recent" | "updated" | "important";
 
 type ArticleData = {
   breaking_until?: Date;
@@ -8,6 +8,7 @@ type ArticleData = {
   live_ended_at?: Date;
   published_at?: Date;
   updated_at?: Date;
+  priority?: number;
 };
 
 export type ArticleBadge = {
@@ -26,6 +27,10 @@ export const getArticleBadge = (article: { data: ArticleData }): ArticleBadge | 
   const isLive = data.is_live === true || data.live === true || (data.live_started_at && !data.live_ended_at);
   if (isLive) {
     return { label: "Live", variant: "live" };
+  }
+
+  if ((data.priority ?? 0) >= 70) {
+    return { label: "Importante", variant: "important" };
   }
 
   if (data.published_at) {
