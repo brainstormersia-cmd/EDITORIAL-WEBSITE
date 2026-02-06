@@ -1,6 +1,8 @@
 ---
+import ArticleMeta from "./ArticleMeta.astro";
 import { getArticleBadge } from "../../../apps/finance-rookie/src/lib/badges";
 import { renderKw } from "../../../apps/finance-rookie/src/lib/kw";
+import { SITE_CONFIG } from "../../../apps/finance-rookie/src/site.config";
 
 const { article, variant = "default", categoryLabel, readTime } = Astro.props;
 const {
@@ -12,7 +14,8 @@ const {
   hero_caption,
   hero_source,
   published_at,
-  updated_at
+  updated_at,
+  updatedAt
 } = article.data;
 const heroImage = {
   src: hero_image ?? "/images/hero-finanza.svg",
@@ -21,18 +24,17 @@ const heroImage = {
   sourceUrl: hero_source
 };
 const label = categoryLabel ?? category;
-const displayDate = published_at ?? updated_at ?? new Date().toISOString();
-const formattedDate = new Intl.DateTimeFormat("it-IT", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric"
-}).format(new Date(displayDate));
-const displayReadTime =
-  typeof readTime === "string" ? readTime : readTime ? `${readTime} min lettura` : "—";
+const displayDate = published_at ?? updatedAt ?? updated_at ?? new Date().toISOString();
+const displayReadTime = typeof readTime === "string" ? readTime : readTime ? `${readTime} min lettura` : null;
 const badge = getArticleBadge(article);
+const author = SITE_CONFIG.authors[article.data.author_id];
 ---
 <article class="card-hover border border-border bg-white">
-  <a href={`/article/${article.slug}`} class="block">
+  <a
+    href={`/article/${article.slug}`}
+    class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+    aria-label={`Leggi ${title}`}
+  >
     <div class="relative">
       <img
         src={heroImage.src}
@@ -53,15 +55,13 @@ const badge = getArticleBadge(article);
     </div>
     <div class="p-5 space-y-3">
       <span class="text-xs uppercase tracking-[0.35em] text-muted">{label}</span>
-      <h3 class="font-heading text-2xl font-bold leading-tight">{title}</h3>
+      <h3 class="font-heading text-2xl font-bold leading-tight group-hover:underline">{title}</h3>
       <p class="dek text-sm text-muted">
         {renderKw(excerpt).map((node) =>
           node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
         )}
       </p>
-      <div class="text-[0.7rem] uppercase tracking-[0.35em] text-muted">
-        {formattedDate} · {displayReadTime}
-      </div>
+      <ArticleMeta author={author} date={displayDate} readTime={displayReadTime} size="compact" />
     </div>
   </a>
 </article>

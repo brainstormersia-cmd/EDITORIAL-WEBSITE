@@ -1,0 +1,51 @@
+---
+import { renderKw } from "../lib/kw";
+
+const { why = [], impact = [] } = Astro.props;
+const trimmedWhy = why.filter(Boolean).slice(0, 4);
+const trimmedImpact = impact.filter(Boolean).slice(0, 4);
+---
+{trimmedWhy.length || trimmedImpact.length ? (
+  <div class="mt-6 border border-border/60 bg-white/70 px-5 py-4">
+    <div class="grid gap-6 md:grid-cols-2">
+      {trimmedWhy.length ? (
+        <div class="space-y-3">
+          <p class="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-muted">
+            Perché conta
+          </p>
+          <ul class="space-y-2 text-sm text-fg/80">
+            {trimmedWhy.map((item) => (
+              <li class="flex gap-2" key={item}>
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+                <span>
+                  {renderKw(item).map((node) =>
+                    node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {trimmedImpact.length ? (
+        <div class="space-y-3">
+          <p class="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-muted">
+            Impatto
+          </p>
+          <ul class="space-y-2 text-sm text-fg/80">
+            {trimmedImpact.map((item) => (
+              <li class="flex gap-2" key={item}>
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+                <span>
+                  {renderKw(item).map((node) =>
+                    node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  </div>
+) : null}

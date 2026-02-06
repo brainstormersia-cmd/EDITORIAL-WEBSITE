@@ -1,37 +1,51 @@
 ---
 import ArticleBadges from "./ArticleBadges.astro";
+import ArticleMeta from "@theme/components/ArticleMeta.astro";
 import { renderKw } from "../lib/kw";
+import { readingTime } from "@theme/utils/readingTime";
 
-const { articles = [], getCategoryLabel } = Astro.props;
+const { articles = [], getCategoryLabel, authors } = Astro.props;
 ---
 {articles.length ? (
   <section class="section-block py-10 md:py-14">
     <div class="container space-y-8">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <h2 class="font-heading text-3xl leading-tight md:text-4xl">Related articles</h2>
+        <h2 class="font-heading text-3xl leading-tight md:text-4xl">Articoli correlati</h2>
         <a href="/blog" class="text-xs uppercase tracking-[0.35em] text-muted hover:text-accent">
           Archivio
         </a>
       </div>
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (
-          <article class="border border-border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:border-black/30">
-            <div class="flex items-center justify-between">
-              <p class="text-[0.6rem] uppercase tracking-[0.3em] text-muted">
-                {getCategoryLabel?.(article.data.category) ?? article.data.category}
-              </p>
-              <ArticleBadges article={article} />
-            </div>
-            <h3 class="mt-3 font-heading text-xl leading-tight">
-              <a href={`/article/${article.slug}`} class="hover:underline">
+          <article class="border border-border bg-white transition-all duration-200 hover:-translate-y-1 hover:border-black/30 hover:shadow-sm">
+            <a
+              href={`/article/${article.slug}`}
+              class="group flex h-full flex-col p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+              aria-label={`Leggi ${article.data.title}`}
+            >
+              <div class="flex items-center justify-between">
+                <p class="text-[0.6rem] uppercase tracking-[0.3em] text-muted">
+                  {getCategoryLabel?.(article.data.category) ?? article.data.category}
+                </p>
+                <ArticleBadges article={article} />
+              </div>
+              <h3 class="mt-3 font-heading text-xl leading-tight group-hover:underline">
                 {article.data.title}
-              </a>
-            </h3>
-            <p class="mt-3 text-sm text-muted">
-              {renderKw(article.data.excerpt).map((node) =>
-                node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
-              )}
-            </p>
+              </h3>
+              <p class="mt-3 text-sm text-muted">
+                {renderKw(article.data.excerpt).map((node) =>
+                  node.type === "mark" ? <mark class="kw-mark">{node.value}</mark> : node.value
+                )}
+              </p>
+              <div class="mt-auto pt-4">
+                <ArticleMeta
+                  author={authors?.[article.data.author_id]}
+                  date={article.data.published_at ?? article.data.updatedAt ?? article.data.updated_at}
+                  readTime={article.data.readingTime ?? readingTime(article.body ?? "")}
+                  size="compact"
+                />
+              </div>
+            </a>
           </article>
         ))}
       </div>

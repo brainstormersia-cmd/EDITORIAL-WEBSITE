@@ -18,7 +18,12 @@ const articles = defineCollection({
     status: z.enum(["draft", "published"]).default("draft"),
     published_at: z.coerce.date(),
     updated_at: z.coerce.date().optional(),
-    featured: z.boolean().optional(),
+    updatedAt: z.coerce.date().optional(),
+    priority: z.number().min(0).max(100).default(0),
+    featured: z.boolean().default(false),
+    evergreen: z.boolean().default(false),
+    pinnedUntil: z.coerce.date().optional(),
+    readingTime: z.number().optional(),
     breaking: z.boolean().optional(),
     breaking_until: z.coerce.date().optional(),
     is_live: z.boolean().optional(),
@@ -43,9 +48,14 @@ const articles = defineCollection({
     hero_source: z.string().url().optional(),
 
     takeaways: z.array(z.string()).optional(),
-    impact: z.string().optional(),
+    in30s: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    whyItMatters: z.array(z.string()).optional(),
+    impact: z.union([z.string(), z.array(z.string())]).optional(),
     do_now: z.array(z.string()).optional(),
     rookie_lens: z.string().optional(),
+    rookieLens: z.string().optional(),
+    analysisUrl: z.string().url().optional(),
 
     sources: z.array(
       z.object({
