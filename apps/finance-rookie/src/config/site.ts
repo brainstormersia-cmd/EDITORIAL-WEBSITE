@@ -1,5 +1,3 @@
-export { SITE_CONFIG } from "./config/site";
-export type { SiteConfig } from "./config/site";
 export const SITE_CONFIG = {
   name: "FinanceRookie",
   description: "Finanza ed economia spiegate bene: notizie, analisi e trend per rookie ambiziosi.",
